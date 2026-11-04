@@ -59,7 +59,7 @@ que também roda os testes e gera o zip). Os JSON de idiomas e as fontes são in
 > ⚠️ A configuração do PyInstaller foi escrita mas **ainda não foi executada** (veja “Situação”).
 
 ### Versão web
-Preparada, **não testada em navegador**. Análise, riscos e checklist em [`docs/WEB.md`](docs/WEB.md).
+O build gera `build/startup-tycoon-itch.zip` para HTML5 no itch.io e o GitHub Actions salva uma cópia como artefato. A partida no navegador ainda precisa de validação; instruções em [`docs/WEB.md`](docs/WEB.md).
 
 ### Adicionar um idioma
 1. Copie `locales/en_US.json` para `locales/xx_XX.json` e traduza `strings` e `meta` (formato de número, moeda, data, meses).
@@ -85,7 +85,7 @@ STARTUP-TYCOON/
 ├── locales/             pt_BR · en_US · es_ES · fr_FR · de_DE (.json)
 ├── assets/fonts/        DejaVu Sans Condensed (acentos, ç, ñ, ß, €)
 ├── tests/               test_i18n.py · test_ui_languages.py · smoke_ui.py · simulate.py
-├── tools/               build_windows.bat · build_web.sh · take_screenshots.py
+├── tools/               build_windows.bat · build_web.sh · build_web.py · take_screenshots.py
 ├── docs/                WEB.md · itch/page.md
 └── startup_tycoon.spec  configuração do PyInstaller
 ```
@@ -111,7 +111,7 @@ Ainda não há screenshots no repositório. Gere os reais com `python tools/take
 - Sem som e sem jogos salvos; o controle de volume do `settings.json` ainda não é usado.
 - Símbolo da moeda muda com o idioma (R$, $, €) **somente na exibição**: não há conversão cambial.
 - Francês e alemão sem revisão de falantes nativos. Nomes dos funcionários são sempre os mesmos.
-- Versão web e executável Windows: preparados, não testados (ver acima).
+- Versão web: ZIP gerado, partida no navegador ainda não validada (ver acima). Executável Windows: preparado, não testado.
 - Texto longo demais é reduzido ou cortado com “…” em vez de quebrar o layout.
 
 ---
@@ -136,7 +136,7 @@ python main.py
 **Build the Windows executable:** `pip install -r requirements-dev.txt` then `pyinstaller startup_tycoon.spec --noconfirm`
 → `dist/StartupTycoon/StartupTycoon.exe` (not yet run — see Status below).
 
-**Web build (Pygbag):** prepared but untested in a browser — see [`docs/WEB.md`](docs/WEB.md).
+**Web build (Pygbag):** `python tools/build_web.py` creates `build/startup-tycoon-itch.zip`. The build is packaged; browser gameplay still needs validation — see [`docs/WEB.md`](docs/WEB.md).
 
 **Tests:** `python -m unittest discover -s tests -v` · `python tests/smoke_ui.py` · `python tests/simulate.py`.
 Without pygame installed they run on a development-only Pillow stand-in (not a real-pygame validation).
@@ -153,4 +153,4 @@ Without pygame installed they run on a development-only Pillow stand-in (not a r
 | i18n (5 idiomas), seletor, persistência, formatação regional | Implementado e testado (pygame substituto) |
 | Renderização com pygame real | **Não testada** |
 | Executável Windows (PyInstaller) | Implementado, **não testado** |
-| Versão web (Pygbag) | Parcial, **não testada** |
+| Versão web (Pygbag) | ZIP de itch.io gerado; jogo no navegador ainda não validado |
