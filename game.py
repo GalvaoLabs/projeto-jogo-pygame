@@ -16,7 +16,13 @@ from systems.settings_manager import SettingsManager
 
 class Game:
     def __init__(self, settings_path=None):
-        pygame.init()
+        if paths.is_web():
+            # The game has no audio. Avoid initializing SDL audio in the browser,
+            # where it waits for a media gesture before allowing the game to start.
+            pygame.display.init()
+            pygame.font.init()
+        else:
+            pygame.init()
         # Settings first: the saved language must be active before the first frame is drawn.
         self.settings = SettingsManager(path=settings_path, valid_languages=L.available_languages)
         L.set_language(self.settings.language)
@@ -315,4 +321,5 @@ class Game:
             self.new_game()
         if ui.button(s, (S.WIDTH // 2 + 10, 580, 240, 54), t("end.main_menu"), kind="ghost", size=20):
             self.state = "menu"
+
 
