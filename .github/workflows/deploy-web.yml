@@ -1,4 +1,4 @@
-name: Build and deploy web game
+name: Build web game for itch.io
 
 on:
   push:
@@ -13,7 +13,6 @@ on:
       - "locales/**"
       - "assets/**"
       - "requirements.txt"
-      - "tools/build_web.sh"
       - "tools/build_web.py"
       - ".github/workflows/deploy-web.yml"
   workflow_dispatch:
@@ -22,7 +21,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: github-pages
+  group: itch-html5-build
   cancel-in-progress: true
 
 jobs:
@@ -36,10 +35,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Build web game
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install -r requirements.txt "pygbag>=0.9.3"
-          python tools/build_web.py
+        run: python tools/build_web.py
       - name: Upload itch.io package
         uses: actions/upload-artifact@v4
         with:
@@ -47,21 +43,3 @@ jobs:
           path: build/startup-tycoon-itch.zip
           if-no-files-found: error
           retention-days: 30
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: build/web
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
