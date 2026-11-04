@@ -1,0 +1,4 @@
+# Only needed to build / test; NOT needed to play.
+pyinstaller>=6.0      # Windows executable
+pygbag>=0.9           # browser (WebAssembly) build
+Pillow>=10            # only for the dev-only pygame stand-in in tests/support (when real pygame is missing)
