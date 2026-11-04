@@ -1,4 +1,5 @@
 """Tiny immediate-mode UI toolkit shared by every screen."""
+<<<<<<< HEAD
 import os
 
 import pygame
@@ -61,6 +62,30 @@ def text(surf, s, pos, size=16, color=S.TEXT, bold=False, anchor="topleft", max_
 
 def wrap(s, size, width, bold=False, max_lines=None):
     """Greedy word wrap. With ``max_lines`` the last line is ellipsized instead of overflowing."""
+=======
+import pygame
+
+import settings as S
+
+_fonts = {}
+
+
+def font(size, bold=False):
+    key = (size, bold)
+    if key not in _fonts:
+        _fonts[key] = pygame.font.SysFont("segoeui,arial,helvetica,dejavusans", size, bold=bold)
+    return _fonts[key]
+
+
+def text(surf, s, pos, size=16, color=S.TEXT, bold=False, anchor="topleft"):
+    img = font(size, bold).render(str(s), True, color)
+    rect = img.get_rect(**{anchor: pos})
+    surf.blit(img, rect)
+    return rect
+
+
+def wrap(s, size, width, bold=False):
+>>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
     f = font(size, bold)
     lines, line = [], ""
     for word in str(s).split():
@@ -73,6 +98,7 @@ def wrap(s, size, width, bold=False, max_lines=None):
             line = word
     if line:
         lines.append(line)
+<<<<<<< HEAD
     if max_lines and len(lines) > max_lines:
         rest = " ".join(lines[max_lines - 1:])
         lines = lines[:max_lines - 1] + [fit_text(rest, size, width, bold, min_size=size)[0]]
@@ -120,6 +146,11 @@ def draw_flag(surf, rect, code):
     pygame.draw.rect(surf, (10, 12, 20), r, 1)
 
 
+=======
+    return lines
+
+
+>>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
 def lighten(c, amt=22):
     return tuple(min(255, v + amt) for v in c)
 
@@ -165,9 +196,13 @@ class UI:
         pygame.draw.rect(surf, col, rect, border_radius=8)
         if active and enabled:
             pygame.draw.rect(surf, S.WHITE, rect, 2, border_radius=8)
+<<<<<<< HEAD
         text(surf, label, rect.center, size, tcol, bold=True, anchor="center", max_w=rect.w - 16)
         if LAYOUT_HOOK:
             LAYOUT_HOOK("button", rect, label)
+=======
+        text(surf, label, rect.center, size, tcol, bold=True, anchor="center")
+>>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
         if hovered and enabled and self.clicked:
             self.clicked = False
             return True
@@ -180,7 +215,11 @@ class UI:
         pygame.draw.rect(surf, color, rect, border_radius=12)
         pygame.draw.rect(surf, S.BORDER, rect, 1, border_radius=12)
         if title:
+<<<<<<< HEAD
             text(surf, title, (rect.x + 16, rect.y + 12), 15, S.MUTED, bold=True, max_w=rect.w - 32)
+=======
+            text(surf, title, (rect.x + 16, rect.y + 12), 15, S.MUTED, bold=True)
+>>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
         return rect
 
     def bar(self, surf, rect, value, maxv=100, color=S.BLUE):
@@ -192,8 +231,11 @@ class UI:
             pygame.draw.rect(surf, color, fill, border_radius=6)
 
     def toast(self, msg, ok=True):
+<<<<<<< HEAD
         """``msg`` may be a ``Msg`` (translated every frame, so a language change applies at once)
         or a plain string."""
+=======
+>>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
         self.toasts.append([msg, ok, 3.2])
         self.toasts = self.toasts[-3:]
 
@@ -201,8 +243,12 @@ class UI:
         y = S.HEIGHT - 20
         for t in reversed(self.toasts):
             t[2] -= dt
+<<<<<<< HEAD
             label, sz = fit_text(tr(t[0]), 16, S.WIDTH - 80, True)
             img = font(sz, True).render(label, True, S.WHITE)
+=======
+            img = font(16, True).render(t[0], True, S.WHITE)
+>>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
             w, h = img.get_size()
             r = pygame.Rect(0, 0, w + 32, h + 18)
             r.midbottom = (S.WIDTH // 2, y)
@@ -210,7 +256,10 @@ class UI:
             pygame.draw.rect(surf, col, r, border_radius=10)
             pygame.draw.rect(surf, lighten(col, 40), r, 1, border_radius=10)
             surf.blit(img, (r.x + 16, r.y + 9))
+<<<<<<< HEAD
             if LAYOUT_HOOK:
                 LAYOUT_HOOK("text", pygame.Rect(r.x + 16, r.y + 9, w, h), label)
+=======
+>>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
             y = r.y - 8
         self.toasts = [t for t in self.toasts if t[2] > 0]

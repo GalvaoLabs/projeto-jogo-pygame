@@ -7,8 +7,12 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+<<<<<<< HEAD
 from core.company import Company  # noqa: E402
 from systems.localization import money  # noqa: E402
+=======
+from core.company import Company, money  # noqa: E402
+>>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
 
 
 def idle_bot(c, month):
