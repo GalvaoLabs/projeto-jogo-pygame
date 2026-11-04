@@ -7,7 +7,6 @@ company, so the same function powers the real month-end and the
 from dataclasses import dataclass
 
 import settings as S
-<<<<<<< HEAD
 
 # Display names/descriptions live in locales/*.json (campaign.<id>.name / .desc).
 CAMPAIGNS = [
@@ -15,31 +14,13 @@ CAMPAIGNS = [
     {"id": "ads", "cost": 6_000, "per_k": 5.0, "rep": 0.6},
     {"id": "influencer", "cost": 15_000, "per_k": 4.5, "rep": 1.5},
     {"id": "media", "cost": 40_000, "per_k": 4.0, "rep": 3.0},
-=======
-from systems.time_system import month_label
-
-CAMPAIGNS = [
-    {"id": "social", "name": "Social Media Push", "cost": 2_000, "per_k": 6.0, "rep": 0.4,
-     "desc": "Organic posts and small paid boosts."},
-    {"id": "ads", "name": "Online Ads", "cost": 6_000, "per_k": 5.0, "rep": 0.6,
-     "desc": "Search and display ads with sharp targeting."},
-    {"id": "influencer", "name": "Influencer Partnerships", "cost": 15_000, "per_k": 4.5, "rep": 1.5,
-     "desc": "Tech creators review and recommend the product."},
-    {"id": "media", "name": "TV & Media Blitz", "cost": 40_000, "per_k": 4.0, "rep": 3.0,
-     "desc": "Prime-time spots and press coverage."},
->>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
 ]
 CAMPAIGN_BY_ID = {c["id"]: c for c in CAMPAIGNS}
 
 
 @dataclass
 class MonthReport:
-<<<<<<< HEAD
     month: int            # month counter; the localized label is built by the UI
-=======
-    month: int
-    label: str
->>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
     revenue: int
     salaries: int
     marketing: int
@@ -196,11 +177,7 @@ def calculate_month(company) -> MonthReport:
     quality_end = min(100.0, p.quality + releases * quality_per_release(company) + polish)
 
     return MonthReport(
-<<<<<<< HEAD
         month=company.time.month,
-=======
-        month=company.time.month, label=company.time.label,
->>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
         revenue=revenue, salaries=salaries, marketing=marketing, office=office,
         other=other, one_time=one_time, expenses=expenses, profit=revenue - expenses,
         customers_start=company.customers, organic=organic, referral=referral,

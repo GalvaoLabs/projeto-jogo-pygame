@@ -4,13 +4,8 @@ import random
 import pygame
 
 import settings as S
-<<<<<<< HEAD
 from modes.ui import text, wrap, row as uikit_row
 from systems.localization import L, Msg, t, tu, tn, money
-=======
-from core.company import money
-from modes.ui import text, wrap
->>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
 
 T = 16                      # logical tile size
 SCALE = 2                   # canvas is drawn small and scaled up (pixel look)
@@ -306,7 +301,6 @@ class OfficeMode:
             if ui.clicked:
                 ui.clicked = False
                 self.sel = hovered
-<<<<<<< HEAD
         label = ""
         if hovered and hovered[0] == "emp":
             e = next((x for x in self.c.employees if x.id == hovered[1]), None)
@@ -331,28 +325,6 @@ class OfficeMode:
         pygame.draw.rect(surf, S.BORDER, bg, 1, border_radius=6)
         text(surf, label, (x, pos[1]), size, S.WHITE, bold=True)
 
-=======
-        if hovered and hovered[0] == "emp":
-            e = next((x for x in self.c.employees if x.id == hovered[1]), None)
-            if e:
-                label = f"{e.name} - {e.role}"
-                r = text(surf, label, (mx + 14, my - 8), 14, S.WHITE, bold=True)
-                bg = r.inflate(14, 8)
-                pygame.draw.rect(surf, (20, 24, 38), bg, border_radius=6)
-                pygame.draw.rect(surf, S.BORDER, bg, 1, border_radius=6)
-                text(surf, label, (mx + 14, my - 8), 14, S.WHITE, bold=True)
-        elif hovered:
-            names = {"meeting": "Meeting table", "cooler": "Coffee machine", "plant": "Plant",
-                     "board": "Whiteboard", "desk": "Empty desk"}
-            label = names.get(hovered[0], "")
-            r = text(surf, label, (mx + 14, my - 8), 14, S.WHITE, bold=True)
-            bg = r.inflate(14, 8)
-            pygame.draw.rect(surf, (20, 24, 38), bg, border_radius=6)
-            pygame.draw.rect(surf, S.BORDER, bg, 1, border_radius=6)
-            text(surf, label, (mx + 14, my - 8), 14, S.WHITE, bold=True)
-        self.draw_panel(surf)
-
->>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
     def draw_world(self, s):
         lay, c, t = self.lay, self.c, self.t
         ox, oy, rw, rh = lay["ox"], lay["oy"], lay["rw"], lay["rh"]
@@ -483,25 +455,16 @@ class OfficeMode:
         pygame.draw.line(surf, S.BORDER, (PANEL_X, S.NAV_H), (PANEL_X, S.HEIGHT))
         x, w = PANEL_X + 14, S.WIDTH - PANEL_X - 28
         y = S.NAV_H + 12
-<<<<<<< HEAD
         text(surf, tu("nav.office"), (x, y), 22, S.TEXT, bold=True, max_w=w - 110)
         text(surf, t("office.level", n=c.office_level + 1, max=len(S.OFFICE_LEVELS)), (x + w, y + 5), 14, S.PURPLE,
              bold=True, anchor="topright", max_w=105)
         y += 40
         text(surf, t("office.desks_used", used=len(c.employees), cap=c.office_capacity), (x, y), 15, S.MUTED, max_w=w)
-=======
-        text(surf, "OFFICE", (x, y), 22, S.TEXT, bold=True)
-        text(surf, f"Level {c.office_level + 1} / {len(S.OFFICE_LEVELS)}", (x + w, y + 5), 14, S.PURPLE,
-             bold=True, anchor="topright")
-        y += 40
-        text(surf, f"Desks used: {len(c.employees)} / {c.office_capacity}", (x, y), 15, S.MUTED)
->>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
         ui.bar(surf, (x, y + 24, w, 12), len(c.employees), c.office_capacity,
                S.ORANGE if len(c.employees) >= c.office_capacity else S.BLUE)
         y += 48
         cost = c.next_office_cost
         if cost is None:
-<<<<<<< HEAD
             ui.button(surf, (x, y, w, 46), t("office.at_max"), enabled=False, size=15)
         else:
             kind = "success" if c.cash >= cost else "ghost"
@@ -519,35 +482,12 @@ class OfficeMode:
         by = card.bottom + 12
         text(surf, t("common.cash", v=c.cash), (x, by), 14, S.GREEN if c.cash >= 0 else S.RED, bold=True, max_w=w)
         text(surf, t("common.payroll", v=c.monthly_payroll), (x, by + 22), 14, S.MUTED, max_w=w)
-=======
-            ui.button(surf, (x, y, w, 46), "Office at maximum size", enabled=False, size=15)
-        else:
-            kind = "success" if c.cash >= cost else "ghost"
-            if ui.button(surf, (x, y, w, 46), f"Expand office: {money(cost)}", kind=kind, size=15):
-                ok, msg = c.expand_office()
-                ui.toast(msg, ok)
-            nxt = S.OFFICE_LEVELS[c.office_level + 1]["capacity"] - c.office_capacity
-            text(surf, f"+{nxt} desks. Maintenance grows too.", (x, y + 52), 12, S.MUTED)
-        y += 80
-
-        card = pygame.Rect(x - 4, y, w + 8, 330)
-        ui.card(surf, card, "SELECTED")
-        self.draw_selected(surf, card)
-
-        by = card.bottom + 12
-        text(surf, f"Cash {money(c.cash)}", (x, by), 14, S.GREEN if c.cash >= 0 else S.RED, bold=True)
-        text(surf, f"Payroll {money(c.monthly_payroll)}/mo", (x, by + 22), 14, S.MUTED)
->>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
 
     def draw_selected(self, surf, card):
         c, ui, sel = self.c, self.ui, self.sel
         x, y, w = card.x + 14, card.y + 36, card.w - 28
         if not sel:
-<<<<<<< HEAD
             for i, line in enumerate(wrap(t("office.hint_select"), 14, w)):
-=======
-            for i, line in enumerate(wrap("Click an employee, a desk or an object in the office to inspect it.", 14, w)):
->>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
                 text(surf, line, (x, y + i * 20), 14, S.MUTED)
             return
         kind = sel[0]
@@ -558,7 +498,6 @@ class OfficeMode:
                 return
             e = c.employees[idx]
             sp = self.sprites.get(e.id)
-<<<<<<< HEAD
             text(surf, e.name, (x, y), 22, S.TEXT, bold=True, max_w=w)
             text(surf, t(f"role.{e.role}"), (x, y + 30), 16, e.color, bold=True, max_w=w)
             state = t("state." + (sp.state if sp else "sit"))
@@ -603,51 +542,3 @@ class OfficeMode:
             ui.bar(surf, (x, y + 58, w, 12), c.net_worth, S.GOAL_NET_WORTH, S.GREEN)
             text(surf, t("board.progress", a=c.net_worth, b=S.GOAL_NET_WORTH), (x, y + 78), 13, S.TEXT, max_w=w)
             text(surf, t("board.complete", p=frac * 100), (x, y + 98), 13, S.MUTED, max_w=w)
-=======
-            text(surf, e.name, (x, y), 22, S.TEXT, bold=True)
-            text(surf, e.role, (x, y + 30), 16, e.color, bold=True)
-            state = {"sit": "Working at desk", "walk_out": "Walking", "stay": "On a break",
-                     "walk_back": "Heading back"}.get(sp.state if sp else "sit", "")
-            text(surf, state, (x, y + 54), 14, S.MUTED)
-            ui_rows = [("Salary", money(e.salary) + "/mo"), ("Hiring fee paid", money(e.fee)),
-                       ("Desk", f"#{idx + 1}"), ("Hired", f"month {e.hired_month}")]
-            for i, (a, b) in enumerate(ui_rows):
-                text(surf, a, (x, y + 84 + i * 24), 14, S.MUTED)
-                text(surf, b, (x + w, y + 84 + i * 24), 14, S.TEXT, anchor="topright")
-            text(surf, f"Productivity {e.productivity:.2f}", (x, y + 190), 14, S.MUTED)
-            ui.bar(surf, (x, y + 212, w, 10), e.productivity, 1.3, S.BLUE)
-            if ui.button(surf, (x, y + 240, w, 38), "Manage in HR", kind="primary", size=14):
-                self.goto(1)
-        elif kind == "desk":
-            text(surf, f"Empty desk #{sel[1] + 1}", (x, y), 20, S.TEXT, bold=True)
-            for i, line in enumerate(wrap("Nobody sits here yet. Hire someone in Human Resources.", 14, w)):
-                text(surf, line, (x, y + 34 + i * 20), 14, S.MUTED)
-            if ui.button(surf, (x, y + 110, w, 38), "Go to HR", kind="primary", size=14):
-                self.goto(1)
-        elif kind == "meeting":
-            text(surf, "Meeting table", (x, y), 20, S.TEXT, bold=True)
-            for i, line in enumerate(wrap("Gather the whole team around the table for a quick sync.", 14, w)):
-                text(surf, line, (x, y + 34 + i * 20), 14, S.MUTED)
-            if ui.button(surf, (x, y + 110, w, 38), "Call team meeting", kind="purple", size=14):
-                n = self.send_all("meeting", 7)
-                ui.toast(f"Team meeting called: {n} people on the way." if n else "Everyone is already away from their desk.", bool(n))
-        elif kind == "cooler":
-            text(surf, "Coffee machine", (x, y), 20, S.TEXT, bold=True)
-            for i, line in enumerate(wrap("A coffee break never hurt anybody.", 14, w)):
-                text(surf, line, (x, y + 34 + i * 20), 14, S.MUTED)
-            if ui.button(surf, (x, y + 90, w, 38), "Coffee break", kind="purple", size=14):
-                n = self.send_all("cooler", 5)
-                ui.toast("Coffee break!" if n else "Everyone is already away from their desk.", bool(n))
-        elif kind == "plant":
-            text(surf, "Office plant", (x, y), 20, S.TEXT, bold=True)
-            text(surf, "It looks happy.", (x, y + 34), 14, S.MUTED)
-            if ui.button(surf, (x, y + 70, w, 38), "Water plant", kind="success", size=14):
-                ui.toast("You watered the plant.", True)
-        elif kind == "board":
-            text(surf, "Whiteboard", (x, y), 20, S.TEXT, bold=True)
-            frac = max(0.0, c.net_worth / S.GOAL_NET_WORTH)
-            text(surf, "Company goal", (x, y + 34), 14, S.MUTED)
-            ui.bar(surf, (x, y + 58, w, 12), c.net_worth, S.GOAL_NET_WORTH, S.GREEN)
-            text(surf, f"{money(c.net_worth)} of {money(S.GOAL_NET_WORTH)}", (x, y + 78), 13, S.TEXT)
-            text(surf, f"{frac * 100:.1f}% complete", (x, y + 98), 13, S.MUTED)
->>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334

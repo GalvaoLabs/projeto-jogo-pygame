@@ -5,21 +5,12 @@ import settings as S
 from core import economy
 from core.employee import Employee, NAMES
 from core.product import Product
-<<<<<<< HEAD
 from systems.localization import Msg
 from systems.time_system import TimeSystem
 
 # Actions return ``(ok, Msg)``: a translation key plus raw numeric parameters. The UI translates
 # and formats them at display time, so the economy never builds text and a language change
 # also re-translates messages that are still on screen.
-=======
-from systems.time_system import TimeSystem
-
-
-def money(v) -> str:
-    sign = "-" if v < 0 else ""
-    return f"{sign}R$ {abs(int(round(v))):,}".replace(",", ".")
->>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
 
 
 class Company:
@@ -104,7 +95,6 @@ class Company:
 
     def hire(self, role):
         if role not in S.ROLES:
-<<<<<<< HEAD
             return False, Msg("msg.unknown_role")
         if len(self.employees) >= self.office_capacity:
             return False, Msg("msg.office_full")
@@ -115,23 +105,10 @@ class Company:
         self.cash -= emp.fee
         self.one_time_costs += emp.fee
         return True, Msg("msg.hired", {"name": emp.name, "role": role, "salary": emp.salary, "fee": emp.fee})
-=======
-            return False, "Unknown role."
-        if len(self.employees) >= self.office_capacity:
-            return False, "Office is full. Expand the office first."
-        emp = self._create_employee(role)
-        if self.cash < emp.fee:
-            self.employees.remove(emp)
-            return False, f"Not enough cash for the {money(emp.fee)} hiring fee."
-        self.cash -= emp.fee
-        self.one_time_costs += emp.fee
-        return True, f"Hired {emp.name} ({role}) at {money(emp.salary)}/month. Fee: {money(emp.fee)}."
->>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
 
     def dismiss(self, emp_id):
         emp = next((e for e in self.employees if e.id == emp_id), None)
         if emp is None:
-<<<<<<< HEAD
             return False, Msg("msg.emp_not_found")
         if len(self.employees) <= 1:
             return False, Msg("msg.keep_one")
@@ -141,78 +118,41 @@ class Company:
         self.one_time_costs += emp.severance
         self.employees.remove(emp)
         return True, Msg("msg.dismissed", {"name": emp.name, "sev": emp.severance})
-=======
-            return False, "Employee not found."
-        if len(self.employees) <= 1:
-            return False, "You must keep at least one employee."
-        if self.cash < emp.severance:
-            return False, f"Not enough cash for severance ({money(emp.severance)})."
-        self.cash -= emp.severance
-        self.one_time_costs += emp.severance
-        self.employees.remove(emp)
-        return True, f"{emp.name} was dismissed. Severance: {money(emp.severance)}."
->>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
 
     # ------------------------------------------------------------ office
     def expand_office(self):
         cost = self.next_office_cost
         if cost is None:
-<<<<<<< HEAD
             return False, Msg("msg.office_max")
         if self.cash < cost:
             return False, Msg("msg.expand_no_cash", {"cost": cost})
-=======
-            return False, "Office is already at maximum size."
-        if self.cash < cost:
-            return False, f"Not enough cash. Expansion costs {money(cost)}."
->>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
         self.cash -= cost
         self.capex_this_month += cost
         self.expansion_spent += cost
         self.office_level += 1
-<<<<<<< HEAD
         return True, Msg("msg.expanded", {"cap": self.office_capacity})
-=======
-        return True, f"Office expanded! Capacity is now {self.office_capacity} desks."
->>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
 
     # ------------------------------------------------------------ product
     def set_price(self, price):
         self.product.price = int(economy.clamp(price, S.PRICE_MIN, S.PRICE_MAX))
-<<<<<<< HEAD
         return True, Msg("msg.price_set", {"price": self.product.price})
-=======
-        return True, f"Price set to {money(self.product.price)} per customer/month."
->>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
 
     def invest_dev(self, tier):
         cost, points = S.DEV_INVESTMENTS[tier]
         if self.cash < cost:
-<<<<<<< HEAD
             return False, Msg("msg.dev_no_cash", {"cost": cost})
-=======
-            return False, f"Not enough cash. Needs {money(cost)}."
->>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
         self.cash -= cost
         self.one_time_costs += cost
         self.product.dev_investment += cost
         releases = self.product.add_progress(points, economy.quality_per_release(self))
-<<<<<<< HEAD
         if releases:
             return True, Msg("msg.invested_release", {"cost": cost, "pts": points, "version": self.product.version})
         return True, Msg("msg.invested", {"cost": cost, "pts": points})
-=======
-        msg = f"Invested {money(cost)}: +{points:.0f} development progress."
-        if releases:
-            msg += f" Version {self.product.version} released!"
-        return True, msg
->>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
 
     # ------------------------------------------------------------ marketing
     def toggle_campaign(self, camp_id):
         camp = economy.CAMPAIGN_BY_ID.get(camp_id)
         if camp is None:
-<<<<<<< HEAD
             return False, Msg("msg.unknown_campaign")
         if camp_id in self.active_campaigns:
             self.active_campaigns.discard(camp_id)
@@ -221,16 +161,6 @@ class Company:
             return False, Msg("msg.campaign_no_cash")
         self.active_campaigns.add(camp_id)
         return True, Msg("msg.campaign_launched", {"camp": camp_id, "cost": camp["cost"]})
-=======
-            return False, "Unknown campaign."
-        if camp_id in self.active_campaigns:
-            self.active_campaigns.discard(camp_id)
-            return True, f"{camp['name']} stopped."
-        if self.cash < self.marketing_investment + camp["cost"]:
-            return False, "Not enough cash to fund this campaign every month."
-        self.active_campaigns.add(camp_id)
-        return True, f"{camp['name']} launched ({money(camp['cost'])}/month)."
->>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
 
     # ------------------------------------------------------------ month
     def end_month(self):

@@ -5,7 +5,6 @@
 import os
 import sys
 
-<<<<<<< HEAD
 import tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -17,11 +16,6 @@ from use_pygame import ensure_pygame  # noqa: E402
 
 BACKEND = ensure_pygame()          # "real" pygame when installed, otherwise the dev-only Pillow shim
 print("pygame backend:", BACKEND)
-=======
-os.environ.setdefault("SDL_VIDEODRIVER", "dummy")
-os.environ.setdefault("SDL_AUDIODRIVER", "dummy")
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
->>>>>>> 440bc27087758b9f4bcd405fe6188ca6d129a334
 
 import pygame  # noqa: E402
 

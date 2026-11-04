@@ -6,3 +6,4 @@ dist/
 *.log
 settings.json
 docs/screenshots_tmp/
+.tmp/

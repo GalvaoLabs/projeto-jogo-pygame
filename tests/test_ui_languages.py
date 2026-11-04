@@ -123,6 +123,8 @@ class TestSettingsScreenFlow(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             p = os.path.join(d, "settings.json")
             g = H.new_game(path=p)
+            # This test checks persistence; avoid changing the real SDL window in headless runs.
+            g.apply_display = lambda: None
             g.toggle_fullscreen()
             self.assertTrue(json.load(open(p))["fullscreen"])
             g.toggle_fullscreen()
