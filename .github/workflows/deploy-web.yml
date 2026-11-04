@@ -39,8 +39,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt "pygbag>=0.9.3"
-          bash tools/build_web.sh
-          touch build/web/.nojekyll
+          python tools/build_web.py
       - name: Upload itch.io package
         uses: actions/upload-artifact@v4
         with:
