@@ -25,76 +25,119 @@ pasta privada do app, navegador `localStorage`.
 ```bash
 pip install -r requirements.txt     # pygame-ce
 python main.py
-python -m unittest discover -s tests -v     # testes (funcionam com ou sem pygame instalado)
-python tools/simulate.py                    # checagem de balanceamento (bots jogando 200 partidas)
 ```
 
-## Publicar no itch.io (navegador)
+### Controles
+| Entrada | Ação |
+| --- | --- |
+| Mouse | Clicar em botões, funcionários e objetos do escritório |
+| `TAB` ou botões DASHBOARD / ESCRITÓRIO | Alternar interface |
+| ENCERRAR MÊS | Roda a simulação mensal e mostra o relatório |
+| `Enter` / `Espaço` / `Esc` | Fechar o relatório |
+| `Esc` | Abrir o menu (Continuar volta ao jogo); em Configurações volta ao menu |
 
-```bash
-python tools/build_web.py           # gera dist/startup-tycoon-itch.zip
+### Como gerar o executável (Windows)
 ```
-
-Na página do jogo no itch.io — **confira nesta ordem**, é o que faz aparecer "Run game":
-
-1. *Edit game → Kind of project* = **HTML**. (Se estiver em "Downloadable", o itch **nunca** oferece
-   jogar no navegador, por melhor que seja o zip.)
-2. *Uploads → Upload files* → envie `startup-tycoon-itch.zip`.
-3. Marque **"This file will be played in the browser"** no arquivo enviado.
-4. *Embed options*: *Viewport* **1280 × 720**, marque **Mobile friendly** (orientação *Landscape*),
-   **Fullscreen button** e, se quiser, *Click to launch in fullscreen*.
-5. Salve e abra a página (ou use *Draft* → ver como visitante). Na primeira vez o navegador baixa o
-   runtime Python/WebAssembly do CDN do pygbag (alguns MB) e pede um clique para começar.
-
-Requisito do itch: `index.html` na **raiz** do zip — o script confere isso (`verify`) antes de terminar.
-
-Teste local do mesmo pacote: `cd dist/web && python -m http.server 8000` → http://localhost:8000
-(precisa de internet para baixar o runtime do pygbag).
-
-## Desktop (Windows / macOS / Linux)
-
-PyInstaller não faz cross-compile: rode em cada sistema (ou deixe o GitHub Actions fazer).
-
-```bash
-pip install -r requirements-dev.txt
-python tools/build_desktop.py       # gera dist/StartupTycoon-<sistema>-<arch>.zip|tar.gz
+pip install -r requirements.txt -r requirements-dev.txt
+pyinstaller startup_tycoon.spec --noconfirm
 ```
+Resultado: `dist/StartupTycoon/StartupTycoon.exe` (distribua a pasta inteira, ou use `tools/build_windows.bat`,
+que também roda os testes e gera o zip). Os JSON de idiomas e as fontes são incluídos no pacote.
+> ⚠️ A configuração do PyInstaller foi escrita mas **ainda não foi executada** (veja “Situação”).
 
-* Windows: pode aparecer o aviso do SmartScreen (app sem assinatura) → *Mais informações → Executar assim mesmo*.
-* macOS: app sem assinatura/notarização → botão direito → *Abrir* na primeira vez.
-* Linux: `tar xzf …; ./StartupTycoon/StartupTycoon`.
+### Versão web
+Preparada, **não testada em navegador**. Análise, riscos e checklist em [`docs/WEB.md`](docs/WEB.md).
 
-## Android
+### Adicionar um idioma
+1. Copie `locales/en_US.json` para `locales/xx_XX.json` e traduza `strings` e `meta` (formato de número, moeda, data, meses).
+2. Pronto — nenhum código muda. O idioma só aparece no seletor quando **todas** as chaves de `pt_BR.json` estão presentes e não vazias.
+   Use `"status": "beta"` para exibir a etiqueta *beta* ou `"status": "draft"` para escondê-lo.
+3. Rode os testes (`python -m unittest discover -s tests`).
 
-* Mais simples: o jogo roda no Chrome do Android via itch.io (botão de tela cheia).
-* APK nativo: `pip install buildozer` e `buildozer android debug` (Linux/WSL; o primeiro build baixa
-  SDK/NDK e demora). Troque `package.domain` no `buildozer.spec` antes de publicar na Play Store.
-  O GitHub Actions também gera o APK (`android-apk`).
-
-## CI / releases
-
-`.github/workflows/build.yml`: testes → web, Windows, Linux, macOS (arm64 e Intel) e Android.
-Ao dar push numa tag `vX.Y.Z` cria uma Release no GitHub e, se existir o secret `BUTLER_API_KEY`,
-publica tudo no itch.io (ajuste `ITCH_TARGET` no topo do arquivo para `seu-usuario/seu-jogo`).
-
-## Estrutura
-
+### Arquitetura
 ```
-main.py              ponto de entrada único (desktop, Android e web/pygbag)
-game.py              loop, telas (menu/config/jogo/relatório/fim), save, atalhos
-settings.py          constantes e balanceamento
-core/                simulação (economia, empresa, funcionários, produto) — sem UI
-modes/               Dashboard, Escritório (pixel art) e mini-toolkit de UI
-systems/             localização, storage (arquivo/localStorage), áudio sintetizado, paths
-locales/*.json       um arquivo por idioma (adicionar idioma = adicionar um JSON)
-web/                 template do index.html (loader do pygbag corrigido)
-tools/               build_web, build_desktop, make_icons, simulate
-tests/               unitários + smoke test de todas as telas + "monkey test" de cliques
+STARTUP-TYCOON/
+├── main.py              ponto de entrada (loop assíncrono: desktop e web)
+├── game.py              loop, menu, configurações, relatório, vitória/falência
+├── settings.py          constantes e números de balanceamento
+├── core/                economia e estado da empresa (sem texto de interface)
+│   ├── company.py       ações devolvem (ok, Msg): chave de tradução + números
+│   ├── economy.py · employee.py · product.py
+├── modes/               dashboard.py · office.py · ui.py (toolkit imediato, fontes, ajuste de texto)
+├── systems/
+│   ├── localization.py  t(), tu(), tn(), money(), formatação regional, fallback
+│   ├── settings_manager.py  settings.json (idioma, tela cheia, volume) à prova de arquivo corrompido
+│   ├── paths.py         caminhos em desenvolvimento / PyInstaller / web
+│   └── time_system.py
+├── locales/             pt_BR · en_US · es_ES · fr_FR · de_DE (.json)
+├── assets/fonts/        DejaVu Sans Condensed (acentos, ç, ñ, ß, €)
+├── tests/               test_i18n.py · test_ui_languages.py · smoke_ui.py · simulate.py
+├── tools/               build_windows.bat · build_web.sh · take_screenshots.py
+├── docs/                WEB.md · itch/page.md
+└── startup_tycoon.spec  configuração do PyInstaller
 ```
+A economia trabalha só com números; o texto é montado na interface a partir de `Msg(chave, parâmetros)`.
+Por isso trocar de idioma reconstrói tudo (inclusive avisos ainda na tela) sem tocar na partida.
+Configurações ficam em `%APPDATA%\StartupTycoon\settings.json` (Windows), `~/.config/StartupTycoon/` (Linux)
+ou `~/Library/Application Support/StartupTycoon/` (macOS); defina `STARTUP_TYCOON_CONFIG_DIR` para mudar.
 
-## Limitações conhecidas
+### Testes
+```
+python -m unittest discover -s tests -v   # i18n, formatação, persistência, layout de todas as telas × 5 idiomas
+python tests/smoke_ui.py                  # roteiro de cliques pelo jogo real
+python tests/simulate.py                  # balanceamento da economia com bots
+```
+Sem o pygame instalado, os testes usam um substituto **apenas de desenvolvimento** baseado em Pillow
+(`tests/support`); isso não valida pygame real. Instale `pygame` e rode de novo para a validação definitiva.
 
-* A interface é desenhada em 1280×720 e escalada. Em celulares pequenos os botões ficam menores
-  do que o ideal para toque; um layout touch-first (botões maiores, rolagem por arrasto) é o próximo passo natural.
-* Dificuldade única: uma estratégia focada em marketing vence em ~18 meses (`tools/simulate.py`).
-  Níveis de dificuldade / modo desafio seriam o próximo passo de conteúdo.
+### Screenshots
+Ainda não há screenshots no repositório. Gere os reais com `python tools/take_screenshots.py` (pygame real).
+
+### Limitações conhecidas
+- Janela fixa de 1280 × 720 (tela cheia escala a imagem).
+- Sem som e sem jogos salvos; o controle de volume do `settings.json` ainda não é usado.
+- Símbolo da moeda muda com o idioma (R$, $, €) **somente na exibição**: não há conversão cambial.
+- Francês e alemão sem revisão de falantes nativos. Nomes dos funcionários são sempre os mesmos.
+- Versão web e executável Windows: preparados, não testados (ver acima).
+- Texto longo demais é reduzido ou cortado com “…” em vez de quebrar o layout.
+
+---
+
+## English
+
+A 2D business-management simulation in Python + Pygame. Run a tech startup: hire a team, build and price
+your product, invest in marketing and reach **R$ 1,000,000 net worth** before you run out of cash.
+Two interfaces share one simulation: an **Executive Dashboard** and a pixel-art **Office**.
+
+**Languages:** Português (Brasil, default), English, Español — complete. Français, Deutsch — complete but *beta*
+(no native-speaker review). Switch any time from Menu → Settings; the match is not restarted and the choice is saved.
+Numbers, currency and dates follow the language; game values never change. The currency symbol is display-only (no exchange rate).
+
+**Install & run** (Python 3.9+)
+```
+pip install -r requirements.txt
+python main.py
+```
+**Controls:** mouse for everything · `TAB` switches Dashboard/Office · `Esc` opens the menu / closes the report.
+
+**Build the Windows executable:** `pip install -r requirements-dev.txt` then `pyinstaller startup_tycoon.spec --noconfirm`
+→ `dist/StartupTycoon/StartupTycoon.exe` (not yet run — see Status below).
+
+**Web build (Pygbag):** prepared but untested in a browser — see [`docs/WEB.md`](docs/WEB.md).
+
+**Tests:** `python -m unittest discover -s tests -v` · `python tests/smoke_ui.py` · `python tests/simulate.py`.
+Without pygame installed they run on a development-only Pillow stand-in (not a real-pygame validation).
+
+**Add a language:** copy `locales/en_US.json` to `locales/xx_XX.json`, translate `strings` and `meta`; it appears in the picker once every key of `pt_BR.json` is present.
+
+**Screenshots:** none committed yet; generate real ones with `python tools/take_screenshots.py`.
+
+---
+
+## Situação / Status
+| Item | Estado |
+| --- | --- |
+| i18n (5 idiomas), seletor, persistência, formatação regional | Implementado e testado (pygame substituto) |
+| Renderização com pygame real | **Não testada** |
+| Executável Windows (PyInstaller) | Implementado, **não testado** |
+| Versão web (Pygbag) | Parcial, **não testada** |
