@@ -60,7 +60,7 @@
     "menu.settings": "Paramètres",
     "menu.quit": "Quitter",
     "menu.goal": "Objectif : atteindre {goal:compact} de valeur nette. Ne faites pas faillite.",
-    "menu.hint": "TAB bascule Tableau de bord / Bureaux   |   ESC ouvre ce menu",
+    "menu.hint": "TAB bascule Tableau de bord / Bureaux   |   1-5 onglets   |   E clôture le mois   |   M son   |   F11 plein écran   |   ESC menu",
     "nav.dashboard": "Tableau de bord",
     "nav.office": "Bureaux",
     "nav.menu": "Menu",
@@ -297,6 +297,9 @@
     "board.goal": "Objectif de l'entreprise",
     "board.progress": "{a:money} sur {b:money}",
     "board.complete": "{p:pct1} atteint",
-    "settings.language_label": "Language / Idioma"
+    "settings.language_label": "Language / Idioma",
+    "settings.options": "Options",
+    "settings.sound": "Son",
+    "settings.volume": "Volume"
   }
 }

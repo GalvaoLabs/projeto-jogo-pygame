@@ -146,7 +146,7 @@ class Dashboard:
             ui.bar(surf, (left.x + 392, ry + 6, 70, 10), e.productivity, 1.3, S.BLUE)
             text(surf, L.number(e.productivity, 2), (left.x + 470, ry), 14, S.MUTED)
             confirming = self.pending_dismiss and self.pending_dismiss[0] == e.id
-            if ui.button(surf, (left.right - 96, ry - 1, 84, 26), t("hr.sure") if confirming else t("hr.dismiss"),
+            if ui.button(surf, (left.right - 100, ry - 2, 88, 29), t("hr.sure") if confirming else t("hr.dismiss"),
                          kind="danger", size=13):
                 if confirming:
                     self.act(c.dismiss(e.id))
@@ -166,7 +166,8 @@ class Dashboard:
             r = pygame.Rect(right.x + 16, right.y + 62 + i * 65, 382, 58)
             fee = int(info["salary"] * S.HIRE_FEE_RATE)
             if ui.button(surf, r, "", enabled=not full, kind="ghost"):
-                self.act(c.hire(role))
+                if self.act(c.hire(role)):
+                    ui.sfx("hire")
             pygame.draw.rect(surf, info["color"], (r.x, r.y, 8, r.h), border_top_left_radius=8,
                              border_bottom_left_radius=8)
             # three short lines (title / pay / description) so long translations never collide

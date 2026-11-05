@@ -3,6 +3,7 @@
 # ---------------------------------------------------------------- window
 WIDTH, HEIGHT = 1280, 720
 FPS = 60
+VERSION = "1.1.0"
 TITLE = "Startup Tycoon"            # brand only; the localized window title is app.window_title
 NAV_H = 56
 

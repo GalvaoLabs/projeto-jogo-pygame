@@ -28,8 +28,17 @@ def font(size, bold=False):
     return _fonts[key]
 
 
+_width_cache = {}
+
+
 def text_width(s, size=16, bold=False):
-    return font(size, bold).size(str(s))[0]
+    key = (s, size, bold)
+    w = _width_cache.get(key)
+    if w is None:
+        if len(_width_cache) >= 6000:
+            _width_cache.clear()
+        w = _width_cache[key] = font(size, bold).size(str(s))[0]
+    return w
 
 
 def fit_text(s, size, max_w, bold=False, min_size=None):
@@ -48,10 +57,26 @@ def fit_text(s, size, max_w, bold=False, min_size=None):
     return s.rstrip() + ELLIPSIS, sz
 
 
+_text_cache = {}
+_TEXT_CACHE_MAX = 1500
+
+
+def render_text(s, size, color, bold=False):
+    """Rendered text surface, cached: rendering glyphs every frame is the main CPU cost of an
+    immediate-mode UI, especially on phones and in the browser."""
+    key = (s, size, bold, tuple(color))
+    img = _text_cache.get(key)
+    if img is None:
+        if len(_text_cache) >= _TEXT_CACHE_MAX:
+            _text_cache.clear()
+        img = _text_cache[key] = font(size, bold).render(s, True, color)
+    return img
+
+
 def text(surf, s, pos, size=16, color=S.TEXT, bold=False, anchor="topleft", max_w=None, min_size=None):
     """Draw text. With ``max_w`` the text is shrunk / ellipsized to fit that width."""
     s, size = fit_text(s, size, max_w, bold, min_size)
-    img = font(size, bold).render(s, True, color)
+    img = render_text(s, size, color, bold)
     rect = img.get_rect(**{anchor: pos})
     surf.blit(img, rect)
     if LAYOUT_HOOK and s:
@@ -143,9 +168,11 @@ class UI:
         self.clicked = False
         self.locked = False
         self.toasts = []  # [text, ok, time_left]
+        self.sfx = lambda name: None      # the game plugs its sound player in here
 
-    def begin(self, clicked):
-        self.mouse = pygame.mouse.get_pos()
+    def begin(self, clicked, pos=None):
+        """``pos``: where the click/tap happened (touch screens do not move a cursor first)."""
+        self.mouse = pos if pos is not None else pygame.mouse.get_pos()
         self.clicked = clicked
 
     def hover(self, rect):
@@ -170,9 +197,11 @@ class UI:
             LAYOUT_HOOK("button", rect, label)
         if hovered and enabled and self.clicked:
             self.clicked = False
+            self.sfx("click")
             return True
         if hovered and not enabled and self.clicked:
             self.clicked = False  # swallow clicks on disabled buttons
+            self.sfx("error")
         return False
 
     def card(self, surf, rect, title=None, color=S.CARD):
@@ -191,11 +220,25 @@ class UI:
             fill = pygame.Rect(rect.x, rect.y, max(6, int(rect.w * frac)), rect.h)
             pygame.draw.rect(surf, color, fill, border_radius=6)
 
+    def slider(self, surf, rect, value, maxv=100, color=S.BLUE, step=10):
+        """Click/tap bar. Returns the new value (rounded to ``step``) when the player picks one."""
+        rect = pygame.Rect(rect)
+        self.bar(surf, rect, value, maxv, color)
+        frac = 0 if maxv <= 0 else max(0.0, min(1.0, value / maxv))
+        pygame.draw.circle(surf, S.WHITE, (rect.x + int(rect.w * frac), rect.centery), rect.h // 2 + 3)
+        if self.hover(rect.inflate(16, 24)) and self.clicked:
+            self.clicked = False
+            f = max(0.0, min(1.0, (self.mouse[0] - rect.x) / max(1, rect.w)))
+            return int(round(f * maxv / step) * step)
+        return None
+
     def toast(self, msg, ok=True):
         """``msg`` may be a ``Msg`` (translated every frame, so a language change applies at once)
         or a plain string."""
         self.toasts.append([msg, ok, 3.2])
         self.toasts = self.toasts[-3:]
+        if not ok:
+            self.sfx("error")
 
     def draw_toasts(self, surf, dt):
         y = S.HEIGHT - 20

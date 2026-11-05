@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Tutoriales de Pygame - Introducción al Módulo de Sprites &#8212; pygame v2.6.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=a854c6a8" />
+    <script src="../_static/documentation_options.js?v=b1d3d371"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/translations.js?v=d190bf04"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="Tutoriales de Pygame - Introducción a Surfarray" href="SurfarrayIntro.html" />
+    <link rel="prev" title="Tutoriales de Pygame - ¡Ayuda! ¿Cómo Muevo Una Imagen?" href="MoverImagen.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png" alt="logo image"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><strong>Most useful stuff</strong>:
+	    <a href="../referencias/color.html">Color</a>
+	  </p>
+
+	  <p class="bottom"><strong>Advanced stuff</strong>:
+	    <a href="../referencias/cursors.html">cursors</a> | 
+	    <a href="../referencias/bufferproxy.html">BufferProxy</a>
+	  </p>
+
+	  <p class="bottom"><strong>Other</strong>:
+	    <a href="../referencias/camera.html">camera</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="tutoriales-de-pygame-introduccion-al-modulo-de-sprites">
+<section id="introduccion-al-modulo-de-sprites">
+<h2>Introducción al Módulo de Sprites<a class="headerlink" href="#introduccion-al-modulo-de-sprites" title="Link to this heading">¶</a></h2>
+<dl class="docinfo field-list simple">
+<dt class="field-odd">Author<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pete Shinners</p>
+</dd>
+<dt class="field-even">Contact<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="mailto:pete&#37;&#52;&#48;shinners&#46;org">pete<span>&#64;</span>shinners<span>&#46;</span>org</a></p>
+</dd>
+<dt class="field-odd">Traducción al español<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Estefanía Pivaral Serrano</p>
+</dd>
+</dl>
+<p>Comentario: una forma simple de entender los Sprites, es pensarlos como
+elementos visuales utilizados para representar objetos y personajes en
+juegos, y se pueden crear y manipular utilizando la biblioteca de Pygame.
+Si bien se podría traducir el término &quot;sprite&quot; por &quot;imagen en movimiento&quot;
+o &quot;personaje animado&quot;, en el contexto de programación se ha adoptado
+ampliamente y es comúnmente utilizado en español, sin traducción.</p>
+<p>La versión de pygame 1.3 viene con un nuevo módulo, <code class="docutils literal notranslate"><span class="pre">pygame.sprite</span></code>. Este
+módulo está escrito en Python e incluye algunas clases de nivel superior para
+administrar los objetos del juego. Al usar este módulo en todo su potencial,
+se puede fácilmente administrar y dibujar los objetos del juego. Las clases de
+sprites están muy optimizadas, por lo que es probable que tu juego funcione más
+rápido con el módulo de sprites que sin él.</p>
+<p>El módulo de sprites también pretende ser genérico, resulta que lo podés
+usar con casi cualquier tipo de juego. Toda esta flexibilidad viene con una
+pequeña penalización, es necesario entenderlo para usarlo correctamente. El
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">reference</span> <span class="pre">documentation</span></code> para el módulo de sprites
+puede mantenerte andando, pero probablemente necesites un poco más de
+explicaicón sobre cómo usar <code class="docutils literal notranslate"><span class="pre">pygame.sprite</span></code> en tu propio juego.</p>
+<p>Varios de los ejemplos de pygame (como &quot;chimp&quot; y &quot;aliens&quot;) han sido actualizados
+para usar el módulo de sprites. Es posible que quieras verificarlos para ver de
+qué se trata este módulo de sprites. El módulo de chimp incluso tiene su propio
+tutorial línea por línea, que puede ayudar a comprender mejor la programación
+con python y pygame.</p>
+<p>Tengan en cuenta que esta introducción asumirá que tienen un poco de experiencia
+programando con python y que están familiarizados con diferentes partes de la
+creación de un simple juego. En este tutorial la palabra &quot;referencia&quot; es usada
+ocasionalmente. Esta representa una variable de python. Las variables en python
+son referencias, por lo que pueden haber varias variables apuntando al mismo
+objeto.</p>
+<section id="leccion-de-historia">
+<h3>Lección de Historia<a class="headerlink" href="#leccion-de-historia" title="Link to this heading">¶</a></h3>
+<p>El término &quot;sprite&quot; es un vestigio de las computadoras y máquinas de juego
+más antiguas. Estas cajas antiguas no eran capaces de dibujar y borrar
+gráficos normales lo suficientemente rápido como para que funcionara como
+juego. Estas máquinas tenían un hardware especial para manejar juegos como
+objetos que necesitaban animarse rápidamente. Estos objetos eran llamados
+&quot;sprites&quot; y tenían limitaciones especiales, pero podían dibujarse y
+actualizarse muy rápido. Por lo general, existían en buffers especiales
+superpuestos en el video. Hoy en día las computadores se han vuelto lo
+suficientemente rápidas para manejar objetos similares a sprites sin un
+hardware dedicado. El término sprite es todavía usado para representar
+casi cualquier cosa en un juego 2D animado.</p>
+</section>
+<section id="las-clases">
+<h3>Las Clases<a class="headerlink" href="#las-clases" title="Link to this heading">¶</a></h3>
+<p>El módulo de sprites viene con dos clases principales. La primera es
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Sprite</span></code>, que debe usarse como clse base para
+todos los objetos de tu juego. Esta clase realmente no hace nada por sí sola,
+sólo incluye varias funciones para ayudar a administrar el objeto del juego.
+El otro tipo de clase es <code class="xref py py-class docutils literal notranslate"><span class="pre">Group</span></code>. La clase
+<code class="docutils literal notranslate"><span class="pre">Group</span></code> es un contenedor para diferentes objetos <code class="docutils literal notranslate"><span class="pre">Sprite</span></code>. De hecho, hay
+varios tipos diferentes de clases de Group. Algunos de los <code class="docutils literal notranslate"><span class="pre">Groups</span></code> pueden
+dibujar todos los elementos que contienen, por ejemplo.</p>
+<p>Esto es todo lo que hay, realmente. Comenzaremos con una descriçión de lo que
+hace cada tipo de clase y luego discutiremos las formas adecuadas de usar las
+dos clases.</p>
+</section>
+<section id="la-clase-sprite">
+<h3>La Clase Sprite<a class="headerlink" href="#la-clase-sprite" title="Link to this heading">¶</a></h3>
+<p>Como se mencionó anteriormente, la clase Sprite está diseñada para ser una clase
+base para todos los objetos del juego. Realmente no podés usarla por sí sola, ya
+que sólo tiene varios métodos para ayudarlo a trabajar con diferentes clases
+<code class="docutils literal notranslate"><span class="pre">Grupo</span></code>. El sprite realiza un seguimiento de a qué grupo pertenece.
+El constructor de clases (método <code class="docutils literal notranslate"><span class="pre">__init__</span></code>) toma un argumento de un <code class="docutils literal notranslate"><span class="pre">Grupo</span></code>
+(o listas de <code class="docutils literal notranslate"><span class="pre">Grupos</span></code>) al que debería pertencer la instancia <code class="docutils literal notranslate"><span class="pre">Sprite</span></code>.
+También se puede cambiar la pertenencia del <code class="docutils literal notranslate"><span class="pre">Sprite</span></code> con los métodos
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">add()</span></code> y
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">remove()</span></code>.
+Hay también un método <code class="xref py py-meth docutils literal notranslate"><span class="pre">groups()</span></code>, que devuelve
+una lista de los grupos actuales que contiene el sprite.</p>
+<p>Cuando se usen las clases de Sprite, es mejor pensarlas como &quot;válidas&quot; o &quot;vivas&quot;,
+cuando pertenecen a uno o más <code class="docutils literal notranslate"><span class="pre">Grupos</span></code>. Cuando se eliminen las instancias de todos
+los grupos, pygame limpiará el objeto. (A menos que tengas tus propias referencias
+a la instancia en otro lugar.) El método <code class="xref py py-meth docutils literal notranslate"><span class="pre">kill()</span></code>
+elimina los sprites de todos los grupos a los que pertenece. Esto eliminará
+limpiamente el objeto sprite. Si ya has armado algún juego, sabés que a veces
+eliminar limpiamente un objeto del juego puede ser complicado. El sprite también
+viene con un método <code class="xref py py-meth docutils literal notranslate"><span class="pre">alive()</span></code> que devuelve &quot;true&quot;
+(verdadero) si todavía es miembro de algún grupo.</p>
+</section>
+<section id="la-clase-grupo">
+<h3>La Clase Grupo<a class="headerlink" href="#la-clase-grupo" title="Link to this heading">¶</a></h3>
+<p>La clase <code class="docutils literal notranslate"><span class="pre">Group</span></code> es solo un simple contenedor. Similar a un sprite, tiene
+un método <code class="xref py py-meth docutils literal notranslate"><span class="pre">add()</span></code> y otro método
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">remove()</span></code> que puede cambiar qué sprites
+pertenecen a el grupo. También podés pasar un sprite o una lista de sprites
+al constructor (<code class="docutils literal notranslate"><span class="pre">__init__()</span></code> method) para crear una instancia <code class="docutils literal notranslate"><span class="pre">Group</span></code>
+que contiene algunos sprites iniciales.</p>
+<p>El <code class="docutils literal notranslate"><span class="pre">Group</span></code> tiene algunos otros métodos como
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">empty()</span></code> para eliminar todos los sprites
+de el grupo y <code class="xref py py-meth docutils literal notranslate"><span class="pre">copy()</span></code> que devolverá una
+copia del grupo con todos los mismos miembros. Además, el método
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">has()</span></code> verificará rápidamente si el
+<code class="docutils literal notranslate"><span class="pre">Group</span></code> contiene un sprite o lista de sprites.</p>
+<p>La otra función que usarás frecuentemente es el método
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">sprites()</span></code>. Esto devuelve un objeto
+que se puede enlazar para acceder a todos los sprites que contiene el grupo.
+Actualmente, esta es solo una lista de sprites, pero en una versión posterior
+de python es probable que use iteradores para un mejor rendimiento.</p>
+<p>Como atajo, el <code class="docutils literal notranslate"><span class="pre">Group</span></code> también tiene un método
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">update()</span></code>, que llamará a un método
+<code class="docutils literal notranslate"><span class="pre">update()</span></code> para cada sprite en el grupo, pasando los argumentos a cada uno.
+Generalmente, en un juego se necesita alguna función que actualice el estado de
+los objetos del juego. Es muy fácil llamar a tu propio método usando el método
+<code class="docutils literal notranslate"><span class="pre">Group.sprites()</span></code>, pero este es un atajo que se usa lo suficiente como para
+ser incluido. También, tengan en cuenta que la clase base <code class="docutils literal notranslate"><span class="pre">Sprite</span></code> tiene un
+método ficticio, tipo &quot;dummy&quot;, <code class="docutils literal notranslate"><span class="pre">update()</span></code> que toma cualquier tipo de
+argumento y no hace nada.</p>
+<p>Por último, el Group tiene un par de otros métodos que permiten usarlo como
+funición interna <code class="docutils literal notranslate"><span class="pre">len()</span></code>, obteniendo el número de sprites que contiene, y
+el operador &quot;truth&quot; (verdad), que te permite hacer &quot;if mygroup:&quot; para verificar
+si el grupo tiene sprites.</p>
+</section>
+<section id="mezclandolos-juntos">
+<h3>Mezclándolos Juntos<a class="headerlink" href="#mezclandolos-juntos" title="Link to this heading">¶</a></h3>
+<p>A esta altura, las dos clases parecen bastante básicas. No hacen mucho más de
+lo que podés hacer con una simple lista y tu propia clase de objetos de juego.
+Pero hay algunas ventajas grandes al usar <code class="docutils literal notranslate"><span class="pre">Sprite</span></code> y <code class="docutils literal notranslate"><span class="pre">Group</span></code> juntos. Un
+sprite puede pertenecer a tantos grupos como quieras, recordá que tan pronto
+como pertenezca a ningún grupo, generalmente se borrará (a menos que tengas otra
+referencia &quot;no-grupales&quot; para ese objeto)</p>
+<p>Lo primero es una forma rápida y sencilla de categorizar sprites. Por ejemplo,
+digamos que tenemos un juego tipo Pacman. Podríamos hacer grupos separados por
+diferentes tipos de objetos en el juego. Fantasmas, Pac y Pellets (pastilla de
+poder). Cuando Pac come una pastilla de poder, podemos cambiar el estado de todos
+los objetos fantasma afectando a todo el grupo Fantasma. Esta manera es más rápida
+y sencilla que recorrer en loop la lista de todos los objetos del juego y comrpobar
+cuáles son fantasmas.</p>
+<p>Agregar y eliminar grupos y sprites entre sí es una operación muy rápida, más
+rápida que usar listas para almacenar todo. Por lo tanto, podés cambiar de manera
+muy eficiente la pertenencia de los grupos. Los grupos se pueden usar para funcionar
+como atributos simples para cada objeto del juego. En lugar de rastrear algún atributo
+como &quot;close_to_player&quot; para un montón de objetos enemigos, podrías agregarlos a un
+grupo separado. Luego, cuando necesites acceder a todos los enemigos que están cerca
+del jugador, ya tenés una lista de ellos, en vez de examinar una lista de todos los
+enemigos, buscando el indicador &quot;close_to_player&quot;. Más adelante, tu juego podría
+agregar múltiples jugadores, y en lugar de agregar más atributos &quot;close_to_player2&quot;,
+&quot;close_to_player3&quot;, podés fácilmente agregarlos a diferentes grupos o a cada jugador.</p>
+<p>Otro beneficio importante de usar <code class="docutils literal notranslate"><span class="pre">Sprites</span></code> y <code class="docutils literal notranslate"><span class="pre">Groups</span></code> es que los grupos
+manejan limpiamente el borrado (o eliminación) de los objetos del juego. En un juego
+en el que muchos objetos hacen referencia a otros objetos, a veces eliminar un objeto
+puede ser la parte más difícil, ya que no puede desaparecer hasta que nadie haga
+referencia a él. Digamos que tenemos un objeto que está &quot;persiguiendo&quot; a otro objeto.
+El perseguidor puede mantener un Group simple que hace referencia al objeto (u
+objetos) que está persiguiendo. Si el objeto perseguido es destruido, no necesitamos
+preocuparnos por notificar al perseguidor que deje de perseguir. El perseguidor puede
+verlo por sí mismo que su grupo está ahora vacío y quizás encuentre un nuevo objetivo.</p>
+<p>Una vez más, lo que hay que recordar es que agregar y eliminar sprites de grupos es
+una operación muy barata/rápida. Puede que te vaya mejor agregando muchos grupos
+para contener y organizar los objetos de tu juego. Algunos podrían incluso estar
+vacíos durante gran parte del juego, no hay penalizaciones por administrar tu juego
+de esta manera.</p>
+</section>
+<section id="los-muchos-tipos-de-grupos">
+<h3>Los Muchos Tipos de Grupos<a class="headerlink" href="#los-muchos-tipos-de-grupos" title="Link to this heading">¶</a></h3>
+<p>Los ejemplos anteriores y las razones para usar <code class="docutils literal notranslate"><span class="pre">Sprites</span></code> y <code class="docutils literal notranslate"><span class="pre">Groups</span></code> son solo
+la punta del iceberg. Otra ventaja es que el módulo viene con varios tipos
+diferentes de <code class="docutils literal notranslate"><span class="pre">Groups</span></code>. Todos estos grupos funcionan como un <code class="docutils literal notranslate"><span class="pre">Group</span></code> normal
+y corrientes, pero también tienen funcionalidades añadidas (o ligeramente
+diferentes). Acá hay una lista de las clases <code class="docutils literal notranslate"><span class="pre">Group</span></code> incluidas con el módulo
+de sprites.</p>
+<blockquote>
+<div><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Group</span></code></p>
+<blockquote>
+<div><p>Este es el grupo estándar, &quot;sin lujos&quot;, explicado principalmente
+anteriormente. La mayoría de los otros <code class="docutils literal notranslate"><span class="pre">Groups</span></code> se derivan de este,
+pero no todos.</p>
+</div></blockquote>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">GroupSingle</span></code></p>
+<blockquote>
+<div><p>Esto funciona exactamente como la clase regular <code class="docutils literal notranslate"><span class="pre">Group</span></code>, pero solo contiene
+el sprite agregado más recientemente. Por lo tanto, cuando agregues un sprite
+a este grupo, se &quot;olvida&quot; de los sprites que tenía anteriormente. Por lo tanto,
+siempre contiene solo uno o cero sprites.</p>
+</div></blockquote>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">RenderPlain</span></code></p>
+<blockquote>
+<div><p>Este es un grupo estándar derivado de <code class="docutils literal notranslate"><span class="pre">Group</span></code>. Tiene un método draw()
+que dibuja en la pantalla (o en cualquier <code class="docutils literal notranslate"><span class="pre">Surface</span></code>) todos los sprites
+que contiene. Para que esto funcione, requiere que todos los sprites
+contenidos tengan los atributos &quot;imagen&quot; y &quot;rect&quot;. Estos son utilizados
+para saber qué blittear y donde blittear.</p>
+</div></blockquote>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">RenderClear</span></code></p>
+<blockquote>
+<div><p>Esto se deriva del grupo <code class="docutils literal notranslate"><span class="pre">RenderPlain</span></code> y agrega además un método
+llamado <code class="docutils literal notranslate"><span class="pre">clear()</span></code>. Esto borrará las posiciónes previas de todos los
+sprites dibujados. Utiliza la imagen de fondo para rellenar las áreas
+donde estaban los sprites. Es lo suficientemente inteligente como para
+manejar los sprites eliminados y borrarlos adecuadamente de la pantalla
+cuando se llama al método <code class="docutils literal notranslate"><span class="pre">clear()</span></code>.</p>
+</div></blockquote>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">RenderUpdates</span></code></p>
+<blockquote>
+<div><p>Este es el Cádilac de renderizado de <code class="docutils literal notranslate"><span class="pre">Groups</span></code>. Es heredado de
+<code class="docutils literal notranslate"><span class="pre">RenderClear</span></code>, pero cambia el método <code class="docutils literal notranslate"><span class="pre">draw()</span></code> para también
+devolver una lista de <code class="docutils literal notranslate"><span class="pre">Rects</span></code> de pygame, que representan todas las
+áreas de la pantalla que han sido modificadas.</p>
+</div></blockquote>
+</div></blockquote>
+<p>Esa es la lista de los diferentes grupos disponibles. Hablaremos más acerca
+de estos grupos de rendering en la próxima sección. No hay nada que te impida
+crear tus propias clases de grupos tampoco. Son solo código de python, asi que
+podés heredar de uno de estos y agregar/cambiar lo que quieras. En el futuro,
+espero que podamos agregar un par más de <code class="docutils literal notranslate"><span class="pre">Groups</span></code> a la lista. Un <code class="docutils literal notranslate"><span class="pre">GroupMulti</span></code>
+que es como el <code class="docutils literal notranslate"><span class="pre">GroupSingle</span></code>, pero que puede contener hasta un número
+determinado de sprites (¿en algún tipo de búfer circular?). También un grupo
+súper renderizador que puede borrar la posición de los sprites sin necesitar
+una imagen de fondo para hacerlo (al tomar una copia de la pantalla antes de
+blittear). Quién sabe realmente, pero en el futuro podemos agregar más clases
+útiles a esta lista.</p>
+<p>Nota de traducción: &quot;rendering&quot; se puede entender como el proceso de producir
+una imagen o animación a partir de datos digitales utilizando software de
+gráficos. La traducción puede ser &quot;renderizado&quot; o &quot;procesamiento de imágenes&quot;.</p>
+</section>
+<section id="los-grupos-de-renderizado">
+<h3>Los Grupos de Renderizado<a class="headerlink" href="#los-grupos-de-renderizado" title="Link to this heading">¶</a></h3>
+<p>De lo analizado anteriormente, podemos ver que hay tres grupos diferentes de
+renderizado. Con <code class="docutils literal notranslate"><span class="pre">RenderUpdates</span></code> podríamos salirnos con la nuestra, pero
+agrega una sobrecarga que no es realmente necesaria para algo como un juego de
+desplazamiento. Así que acá tenemos un par de herramientas, elegí la adecuada
+para cada trabajo.</p>
+<p>Para un juego del tipo de desplazamiento, donde el fondo cambia completamente
+en cada cuadro, obviamente necesitamos no necesitamos preocuparnos por los
+rectángulos de actualización de python en la llamada <code class="docutils literal notranslate"><span class="pre">display.update()</span></code>.
+Definitvamente deberías ir con el grupo <code class="docutils literal notranslate"><span class="pre">RenderPlain</span></code> para administrar tu
+renderizado.</p>
+<p>Para juegos donde el fondo es más estático, definitivamente no vas a querer
+que Pygame actualice la pantalla completa (ya que no es necesario). Este tipo
+de juegos generalmente implica borrar la posición anterior de cada objeto y
+luego dibujarlo en el lugar nuevo de cada cuadro. De esta manera solo estamos
+cambiando lo necesario. La mayoría de las veces solo querrás usar la clase
+<code class="docutils literal notranslate"><span class="pre">RenderUpdates</span></code> acá. Dado que también querrás pasar la lista de cambios a
+la función <code class="docutils literal notranslate"><span class="pre">display.update()</span></code>.</p>
+<p>La clase <code class="docutils literal notranslate"><span class="pre">RenderUpdates</span></code> también hace un buen trabajo al minimizar las
+áreas superpuestas en la lista de rectángulos actualizados. Si la posición
+anterior y la actual de un objeto se superponen, las fusionará en un solo
+rectángulo. Combinado con el hecho de que maneja los objetos eliminados,
+esta es una poderosa clase <code class="docutils literal notranslate"><span class="pre">Group</span></code>. Si has escrito un juego que administra
+los rectángulos modificados para los objetos en el juego, sabés que ésta es
+la causa de la gran cantidad de código desordenado en el juego. Especialmente,
+una vez que empiezas a agregar objetos que puedan ser eliminados en cualquier
+momento. Todo este trabajo se reduce a los monstruosos métodos
+<code class="docutils literal notranslate"><span class="pre">clear()</span></code> y <code class="docutils literal notranslate"><span class="pre">draw()</span></code>. Además, con la verificación de superposición, es
+probable que sea más rápido que cuando lo hacías manualmente.</p>
+<p>También hay que tener en cuenta que no hay nada que impida mezclar y combinar
+estos grupos de renderizado en tu juego. Definitivamente deberías usar
+múltiples grupos de renderizado cuando quieras hacer capas con tus sprites.
+Además, si la pantalla se divide en varias secciones, ¿quizás cada sección
+de la pantalla debería usar un grupo de representación adecuado?</p>
+</section>
+<section id="deteccion-de-colisiones">
+<h3>Detección de Colisiones<a class="headerlink" href="#deteccion-de-colisiones" title="Link to this heading">¶</a></h3>
+<p>El módulo de sprites también viene con dos funciones de detección de
+colisiones muy genéricas. Para juegos más complejos, estos realmente
+no funcionarán adecuadamente, pero fácilmente se puede obtener el código
+fuente y modificarlos según sea necesario.</p>
+<p>Acá hay un resumen de lo que son y lo que hacen.</p>
+<blockquote>
+<div><p><code class="xref py py-func docutils literal notranslate"><span class="pre">spritecollide(sprite,</span> <span class="pre">group,</span> <span class="pre">dokill)</span> <span class="pre">-&gt;</span> <span class="pre">list</span></code></p>
+<blockquote>
+<div><p>Esto verifica las colisiones entre un solo sprite y los sprites en un grupo.
+Requiere un atributo &quot;rect&quot; para todos los sprites usados. Devuelve una lista
+de todos los sprites que se superponen con el primer sprite. El argumento
+&quot;dokill&quot; es un argumento booleano. Si es verdadero, la funcion llamará al
+método <code class="docutils literal notranslate"><span class="pre">kill()</span></code> para todos los sprites. Esto significa que la última
+referencia para cada sprite esté probablemente en la lista devuelta. Una vez
+que la lista desaparece, también lo hacen los sprites. Un ejemplo rápido del
+uso de este bucle</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">bomb</span> <span class="ow">in</span> <span class="n">sprite</span><span class="o">.</span><span class="n">spritecollide</span><span class="p">(</span><span class="n">player</span><span class="p">,</span> <span class="n">bombs</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">boom_sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="n">Explosion</span><span class="p">(</span><span class="n">bomb</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Esto encuentra todos los sprites en el grupo &quot;bomb&quot; que chocan con el jugador.
+Debido al argumento &quot;dokill&quot;, elimina todas las bombas estrelladas. Por cada
+bomba que chocó, se reproduce el sonido &quot;boom&quot; y crea un nuevo <code class="docutils literal notranslate"><span class="pre">Explosion</span></code>
+donde estaba la bomba. (Tengan en cuenta que la clase <code class="docutils literal notranslate"><span class="pre">Explosion</span></code> acá sabe
+agregar cada instancia de la clase apropiada, por lo que no necesitamos
+almacenarla en una variable, esa última línea puede sonar un poco rara para
+los programadores python.)</p>
+</div></blockquote>
+<p><code class="xref py py-func docutils literal notranslate"><span class="pre">groupcollide(group1,</span> <span class="pre">group2,</span> <span class="pre">dokill1,</span> <span class="pre">dokill2)</span> <span class="pre">-&gt;</span> <span class="pre">dictionary</span></code></p>
+<blockquote>
+<div><p>Esto es similar a la función <code class="docutils literal notranslate"><span class="pre">spritecollide</span></code>, pero un poco más compleja.
+Comprueba las colisiones de todos los sprites de un grupo con los sprites de
+otro grupo. Hay un argumento <code class="docutils literal notranslate"><span class="pre">dokill</span></code> para los sprites en cada lista. Cuando
+<code class="docutils literal notranslate"><span class="pre">dokill1</span></code> es verdadero, los sprites que colisionan en <code class="docutils literal notranslate"><span class="pre">group1</span></code> serán
+<code class="docutils literal notranslate"><span class="pre">kill()</span></code> (matados). Cuando <code class="docutils literal notranslate"><span class="pre">dokill2</span></code> es verdaero, vamos a tener el mismo
+resultado para el <code class="docutils literal notranslate"><span class="pre">group2</span></code>. El diccionario que devuelve funciona así; cada
+clave (keys) en el diccionario es un sprite de <code class="docutils literal notranslate"><span class="pre">group1</span></code> que tuvo una colisión.
+El valor de esa clave es una lista de los sprites con los que chocó. Quizás otra
+muestra de código lo explique mejor.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">alien</span> <span class="ow">in</span> <span class="n">sprite</span><span class="o">.</span><span class="n">groupcollide</span><span class="p">(</span><span class="n">aliens</span><span class="p">,</span> <span class="n">shots</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="n">boom_sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="n">Explosion</span><span class="p">(</span><span class="n">alien</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">kills</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>Este código comprueba las colisiones entre las balas de los jugadores y todos
+los aliens con los que podrían cruzarse. En este caso, solo iteramos las
+claves (keys) del diccionario, pero podríamos recorrer también los <code class="docutils literal notranslate"><span class="pre">values()</span></code>
+o <code class="docutils literal notranslate"><span class="pre">items()</span></code> si quisiéramos hacer algo con los disparos específicos que
+chocaron con extraterrestres. Si recorrieramos <code class="docutils literal notranslate"><span class="pre">values()</span></code> estaríamos
+iterando listas que contienen sprites. El mismo sprite podría
+aparecer más de una vez en estas iteraciones diferentes, ya que el mismo
+'disparo' pudo haber chocado con múltiples aliens.</p>
+</div></blockquote>
+</div></blockquote>
+<p>Estas son las funciones básicas de colisión que vienen con pygame. Debería
+ser fácil crear uno propio que quizás use algo diferente al atributo &quot;rect&quot;.
+¿O tal vez intentar ajustar un poco más tu código afectando directamente el
+objeto de colisión en lugar de construir una lista de colisiones? El código
+en las funciones de colisión de sprites está muy optimizado, pero podrías
+acelerarlo ligeramente eliminando algunas funcionalidaded que no necesitas.</p>
+</section>
+<section id="problemas-comunes">
+<h3>Problemas Comunes<a class="headerlink" href="#problemas-comunes" title="Link to this heading">¶</a></h3>
+<p>Actualmente hay un problema principal que atrapa a los nuevos usuarios. Cuando
+derivas tus nueva clase de sprites con la base de Sprite, TENÉS que llamar al
+método <code class="docutils literal notranslate"><span class="pre">Sprite._init_()</span></code> desde el método <code class="docutils literal notranslate"><span class="pre">_init_()</span></code> de tu propia clase. Si
+te olvidás de llamar al método  <code class="docutils literal notranslate"><span class="pre">Sprite.__init__()</span></code>, vas a obtener un error
+críptico, como este</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ne">AttributeError</span><span class="p">:</span> <span class="s1">&#39;mysprite&#39;</span> <span class="n">instance</span> <span class="n">has</span> <span class="n">no</span> <span class="n">attribute</span> <span class="s1">&#39;_Sprite__g&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="extendiendo-tus-propias-clases-avanzado">
+<h3>Extendiendo tus Propias Clases <em>(Avanzado)</em><a class="headerlink" href="#extendiendo-tus-propias-clases-avanzado" title="Link to this heading">¶</a></h3>
+<p>Debido a problemas de velocidad, las clases de <code class="docutils literal notranslate"><span class="pre">Group</span></code> actuales intentan solo
+hacer exactamente lo que necesitan, y no manejar muchas situaciones generales.
+Si decidís que necesitás funciones adicionales, es posible que desees crear tu
+propia clase <code class="docutils literal notranslate"><span class="pre">Group</span></code>.</p>
+<p>Las clases <code class="docutils literal notranslate"><span class="pre">Sprite</span></code> y <code class="docutils literal notranslate"><span class="pre">Gorup</span></code> fueron diseñadas para ser extendidas, así que
+sentite libre de crear tus propias clases <code class="docutils literal notranslate"><span class="pre">Group</span></code> para hacer cosas
+especializadas. El mejor lugar para empezar es probablemente el código fuente
+real de python para el módulo de sprite. Mirar el actual grupo <code class="docutils literal notranslate"><span class="pre">Sprite</span></code>
+debería ser ejemplo suficiente de cómo crear el tuyo propio.</p>
+<p>Por ejemplo, aquí está el código fuente para un <code class="docutils literal notranslate"><span class="pre">Group</span></code> de renderización que
+llama a un método <code class="docutils literal notranslate"><span class="pre">render()</span></code> para cada sprite, en lugar de simplemente blittear
+una variable de &quot;imagen&quot; de él. Como queremos que también maneje áreas
+actualizadas, empezaremos con una copia del grupo <code class="docutils literal notranslate"><span class="pre">RenderUpdates</span></code> original,
+acá está el código</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">RenderUpdatesDraw</span><span class="p">(</span><span class="n">RenderClear</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;call sprite.draw(screen) to render sprites&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surface</span><span class="p">):</span>
+        <span class="n">dirty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lostsprites</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lostsprites</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">spritedict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">newrect</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">screen</span><span class="p">)</span> <span class="c1">#Here&#39;s the big change</span>
+            <span class="k">if</span> <span class="n">r</span> <span class="ow">is</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">dirty</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newrect</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dirty</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newrect</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spritedict</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">newrect</span>
+        <span class="k">return</span> <span class="n">dirty</span>
+</pre></div>
+</div>
+<p>A continuación hay más información acerca de cómo podés crear tus propios
+objetos <code class="docutils literal notranslate"><span class="pre">Sprite</span></code> y <code class="docutils literal notranslate"><span class="pre">Group</span></code> de cero.</p>
+<p>Los objetos <code class="docutils literal notranslate"><span class="pre">Sprite</span></code> solo &quot;requieren&quot; dos métodos: &quot;add_internal()&quot; y
+&quot;remove_internal()&quot;. Estos son llamados por la clase <code class="docutils literal notranslate"><span class="pre">Group</span></code> cuando están
+eliminando un sprite de sí mismos. Los métodos <code class="docutils literal notranslate"><span class="pre">add_internal()</span></code> y
+<code class="docutils literal notranslate"><span class="pre">remove_internal()</span></code> tienen un único argumento que es un grupo. Tu <code class="docutils literal notranslate"><span class="pre">Sprite</span></code>
+necesitará alguna forma de realizar un seguimiento de los <code class="docutils literal notranslate"><span class="pre">Groups</span></code> a los que
+pertenece. Es probable que quieras intentar hacer coincidir los otros métodos
+y argumentos con la clase real de <code class="docutils literal notranslate"><span class="pre">Sprites</span></code>, pero si no vas a usar esos
+métodos, seguro que no los necesitás.</p>
+<p>Son casi los mismos requerimientos para crear tu propio <code class="docutils literal notranslate"><span class="pre">Group</span></code>. De hecho,
+si observas la fuente, verás que el <code class="docutils literal notranslate"><span class="pre">GroupSingle</span></code> no está derivado de la
+clase <code class="docutils literal notranslate"><span class="pre">Group</span></code>, simplemente implementa los mismos métodos, por lo que
+realmente no se puede notar la diferencia. De nuevo, necesitás un método
+&quot;add_internal()&quot; y &quot;remove_internal()&quot; para que los sprites llamen cuando
+quieren pertenecer o eliminarse a sí mismos del grupo. Tanto <code class="docutils literal notranslate"><span class="pre">add_internal()</span></code>
+como <code class="docutils literal notranslate"><span class="pre">remove_internal()</span></code> tienen un único argumento que es un sprite. El único
+requisito adicional para las clases <code class="docutils literal notranslate"><span class="pre">Group</span></code> es que tengan un atributo ficticio
+llamado &quot;_spritegroup&quot;. No importa cuál sea el valor, en tanto el atributo esté
+presente. Las clases Sprite pueden buscar este atributo para determinar la
+diferencia entre un &quot;grupo&quot; y cualquier contenedor ordinario de python. (Esto
+es importante porque varios métodos de sprites pueden tomar un argumento de
+un solo grupo o una secuencia de grupos. Dado que ambos se ven similares, esta
+es la forma más flexible de &quot;ver&quot; la diferencia.)</p>
+<p>Deberías pasar por el código para el módulo de sprite. Si bien el código está
+un poco &quot;afinado&quot;, tiene suficientes comentarios para ayudarte a seguirlo. Hay
+incluso una sección de tareas para hacer en la fuente si tenés ganas de
+contribuir.</p>
+</section>
+</section>
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/tutorials/SpriteIntro.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Índice General"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="right" >
+          <a href="SurfarrayIntro.html" title="Tutoriales de Pygame - Introducción a Surfarray"
+             accesskey="N">siguiente</a> |</li>
+        <li class="right" >
+          <a href="MoverImagen.html" title="Tutoriales de Pygame - ¡Ayuda! ¿Cómo Muevo Una Imagen?"
+             accesskey="P">anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.6.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Tutoriales de Pygame - Introducción al Módulo de Sprites</a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

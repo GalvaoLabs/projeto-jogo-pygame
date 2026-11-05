@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Dando Inicio &#8212; pygame v2.6.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=a854c6a8" />
+    <script src="../_static/documentation_options.js?v=b1d3d371"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/translations.js?v=d190bf04"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="Clases de objetos de juego" href="tom_juegos4.html" />
+    <link rel="prev" title="Revisión: Fundamentos de Pygame" href="tom_juegos2.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png" alt="logo image"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><strong>Most useful stuff</strong>:
+	    <a href="../referencias/color.html">Color</a>
+	  </p>
+
+	  <p class="bottom"><strong>Advanced stuff</strong>:
+	    <a href="../referencias/cursors.html">cursors</a> | 
+	    <a href="../referencias/bufferproxy.html">BufferProxy</a>
+	  </p>
+
+	  <p class="bottom"><strong>Other</strong>:
+	    <a href="../referencias/camera.html">camera</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="dando-inicio">
+<section id="hacerjuegos-3">
+<span id="id1"></span><h2>1. Dando Inicio<a class="headerlink" href="#hacerjuegos-3" title="Link to this heading">¶</a></h2>
+<p>Las primeras secciones de código son relativamente simples y, una vez escritas, pueden usualmente ser pueden reutilizar en todos los
+juegos que posteriormente hagas. Realizarán todas las tareas aburridas y genéricas como cargar módulos, cargar imágenes, abrir
+conexiones de red, reproducir música y así sucesivamente. También incluirán una gestión de errores simple pero efectiva, y cualquier
+personalización que desees proporcionar además de las funciones proporcionadas por los módulos como <code class="docutils literal notranslate"><span class="pre">sys</span></code> y <code class="docutils literal notranslate"><span class="pre">pygame</span></code>.</p>
+<section id="primeras-lineas-y-carga-de-modulos">
+<span id="hacerjuegos-3-1"></span><h3>3.1. Primeras líneas y carga de módulos<a class="headerlink" href="#primeras-lineas-y-carga-de-modulos" title="Link to this heading">¶</a></h3>
+<p>En primer lugar, necesitás iniciar tu juego y cargar tus módulos. Siempre es una buena idea establecer algunas cosas al principio del
+archivo fuente principal, como el nombre del archivo, qué contiene, bajo qué licencia se encuentra, y cualquier otra información útil
+que desees proporcionar a quienes que lo van a estar viendo. Luego puedes cargar módulos, con algunas verificaciones de errores para
+que Python no imprima una traza desagradable que los no programadores no entenderán. El código es bastante simple, por lo que no me
+molestaré en explicarlo.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1">#</span>
+<span class="c1"># Tom&#39;s Pong</span>
+<span class="c1"># A simple pong game with realistic physics and AI</span>
+<span class="c1"># http://www.tomchance.uklinux.net/projects/pong.shtml</span>
+<span class="c1">#</span>
+<span class="c1"># Released under the GNU General Public License</span>
+
+<span class="n">VERSION</span> <span class="o">=</span> <span class="s2">&quot;0.4&quot;</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="kn">import</span> <span class="nn">random</span>
+    <span class="kn">import</span> <span class="nn">math</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+    <span class="kn">import</span> <span class="nn">getopt</span>
+    <span class="kn">import</span> <span class="nn">pygame</span>
+    <span class="kn">from</span> <span class="nn">socket</span> <span class="kn">import</span> <span class="o">*</span>
+    <span class="kn">from</span> <span class="nn">pygame.locals</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">,</span> <span class="n">err</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;couldn&#39;t load module. </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="funciones-de-manejo-de-recursos">
+<span id="hacerjuegos-3-2"></span><h3>3.2. Funciones de manejo de recursos<a class="headerlink" href="#funciones-de-manejo-de-recursos" title="Link to this heading">¶</a></h3>
+<p>En el ejemplo <a class="reference internal" href="ChimpanceLineaporLinea.html"><span class="doc">Chimpancé, Línea Por Línea</span></a>, el primer código que se escribió fue para cargar imagenes y sonidos.
+Como estos eran totalmente independiente de cualquier lógica de juego u objetos del juego, se los escribió como funciones separadas
+y se escribieron primero para que el código posterior pudiera hacer uso de ellas. Generalmente, coloco todo mi código de esta
+naturaleza primero, en sus propias funciones sin clase; estas serán, en términos generales, funciones de manejo de recursos. Por
+supuesto, también podés crear clases para estas funciones, para que puedas agruparlas y tal vez tener un objeto con el que puedas
+controlar todos los recursos. Como con cualquier buen entorno de programación, depende de vos desarrollar tu propia práctica y estilo
+óptimo.</p>
+<p>Siempre es una buena idea escribir tus propias funciones de manejo de recursos, porque aunque Pygame tiene métodos para abrir
+imágenes y sonidos, y otros módulos tendrán sus métodos para abrir otros recursos, esos métodos pueden ocupar más de una línea,
+pueden requerir una modificación constante de tu parte y a menudo no proporcionan un manejo de errores satisfactorios. Escribir
+funciones de manejo de recursos te da código sofisticado y reutilizable, y te da mayor control sobre tus recursos. Tomá este
+ejemplo de una función de carga de imágenes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">load_png</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Load image and return image object&quot;&quot;&quot;</span>
+    <span class="n">fullname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fullname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">image</span><span class="o">.</span><span class="n">get_alpha</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">convert</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">convert_alpha</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot load image: </span><span class="si">{</span><span class="n">fullname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">SystemExit</span>
+    <span class="k">return</span> <span class="n">image</span><span class="p">,</span> <span class="n">image</span><span class="o">.</span><span class="n">get_rect</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Acá creamos una función de carga de imagen más sofisticada que la proporcionada por <code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.image.load()</span></code>. Observen que la
+primera línea de la función es una cadena de documentación describiendo qué hace cada función, y qué objeto(s) devuelve. La
+función asume que todas tus imágenes están en el directorio llamado &quot;data&quot;, por lo que toma el nombre del archivo y crea la ruta
+completa, por ejemplo <code class="docutils literal notranslate"><span class="pre">data/ball.png</span></code>, usando el módulo <em class="citetitle">os</em> para asegurar la compatibilidad entre plataformas.
+Luego intenta cargar la imagen y convertir cualquier región alfa para que puedas lograr la transparencia, y devuelve un mensaje
+de error más legible si hay algún problema. Finalmente, devuelve el objeto de imagen y su clase <code class="xref py py-class docutils literal notranslate"><span class="pre">rect</span></code>.</p>
+<p>Podés crear funciones similares para cargar cualquier otro recurso, como cargar sonidos. También podés crear clases de manejo de
+recursos para darte más flexibilidad con recursos más complejos. Por ejemplo, podrías crear una clase de música, con una función
+<code class="docutils literal notranslate"><span class="pre">__init__</span></code> que carga la música (quizás tomando prestada de la función <code class="docutils literal notranslate"><span class="pre">load_sound()</span></code>), una función para pausar la música y
+otra para reiniciarla. Otra clase útil de manejo de recursos es para conexiones de red. Funciones para abrir sockets, pasar datos
+con seguridad y verificación de errores adecuados, cerrar sockets, buscar direcciones, y otras tareas de red, pueden hacer que
+escribir un juego con capacidades de red sea relativamente indoloro.</p>
+<p>Recordá que la tarea principal de estas funciones/clases es asegurarse de que para cuando llegues a escribir las clases de objetos
+de juego y el bucle principal, casi no haya nada más que hacer. La herencia de clases puede hacer que estas clases básicas sean
+especialmente útiles. Pero no te excedas, las funciones que solo serán utilizadas por una clase deben ser escritas como parte de
+esa clase, no como una función global.</p>
+</section>
+</section>
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/tutorials/tom_juegos3.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Índice General"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="right" >
+          <a href="tom_juegos4.html" title="Clases de objetos de juego"
+             accesskey="N">siguiente</a> |</li>
+        <li class="right" >
+          <a href="tom_juegos2.html" title="Revisión: Fundamentos de Pygame"
+             accesskey="P">anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.6.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Dando Inicio</a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

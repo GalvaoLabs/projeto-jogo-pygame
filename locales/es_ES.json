@@ -60,7 +60,7 @@
     "menu.settings": "Ajustes",
     "menu.quit": "Salir",
     "menu.goal": "Objetivo: alcanzar {goal:compact} de patrimonio neto. No quiebres.",
-    "menu.hint": "TAB cambia entre Panel / Oficina   |   ESC abre este menú",
+    "menu.hint": "TAB cambia entre Panel / Oficina   |   1-5 pestañas   |   E termina el mes   |   M sonido   |   F11 pantalla completa   |   ESC menú",
     "nav.dashboard": "Panel",
     "nav.office": "Oficina",
     "nav.menu": "Menú",
@@ -297,6 +297,9 @@
     "board.goal": "Objetivo de la empresa",
     "board.progress": "{a:money} de {b:money}",
     "board.complete": "{p:pct1} completado",
-    "settings.language_label": "Language / Idioma"
+    "settings.language_label": "Language / Idioma",
+    "settings.options": "Opciones",
+    "settings.sound": "Sonido",
+    "settings.volume": "Volumen"
   }
 }

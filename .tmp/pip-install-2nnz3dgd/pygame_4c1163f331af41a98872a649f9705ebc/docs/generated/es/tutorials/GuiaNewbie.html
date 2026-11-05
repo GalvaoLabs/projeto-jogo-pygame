@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Guía de Pygame para Newbies &#8212; pygame v2.6.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=a854c6a8" />
+    <script src="../_static/documentation_options.js?v=b1d3d371"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/translations.js?v=d190bf04"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="Tutoriales de Pygame - Importar e Inicializar" href="IniciarImportar.html" />
+    <link rel="prev" title="Crear Juegos con Pygame" href="CrearJuegos.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png" alt="logo image"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><strong>Most useful stuff</strong>:
+	    <a href="../referencias/color.html">Color</a>
+	  </p>
+
+	  <p class="bottom"><strong>Advanced stuff</strong>:
+	    <a href="../referencias/cursors.html">cursors</a> | 
+	    <a href="../referencias/bufferproxy.html">BufferProxy</a>
+	  </p>
+
+	  <p class="bottom"><strong>Other</strong>:
+	    <a href="../referencias/camera.html">camera</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="guia-de-pygame-para-principiantes">
+<dl class="docinfo field-list simple">
+<dt class="field-odd">Traducción al español<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Estefanía Pivaral Serrano</p>
+</dd>
+</dl>
+<section id="id1">
+<h2>Guía de Pygame para Principiantes<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<p>o <strong>Cosas que aprendí mediante prueba y error para que vos no tengas que pasar por eso</strong></p>
+<p>o <strong>Cómo aprendí a dejar de preocuparme y amar el blit.</strong></p>
+<p><a class="reference external" href="https://www.pygame.org/">Pygame</a> es un contenedor de Python para <a class="reference external" href="http://libsdl.org">SDL</a>, escrito por Pete Shinners. Lo cual
+significa que al usar pygame, podés escribir juegos u otras aplicaciones
+multimedia en Python que se ejecutarán sin alteraciones en cualquier
+plataforma compatible con SDL (Windows, Unix, Mac, BeOS y otras).</p>
+<p>Pygame puede ser fácil de aprender, pero el mundo de la programación de gráficos
+pueden ser bastante confusos para el recién llegado. Escribí esto para tratar de
+destilar el conocimiento práctico que obtuve durante el último año trabajando
+con pygame y su predecesor, PySDL. He tratado de clasificar las sugerencias en
+orden de importancia, pero cuán relevante es cada consejo dependerá de tu propio
+antecedente y los detalles de tu proyecto.</p>
+<section id="ponte-comodo-trabajando-con-python">
+<h3>Ponte cómodo trabajando con Python<a class="headerlink" href="#ponte-comodo-trabajando-con-python" title="Link to this heading">¶</a></h3>
+<p>Lo más importante es sentirse confiado usando python. Aprender algo
+tan potencialmente complicado como programación de gráficos será un verdadero
+fastidio si tampoco se está familiarizado con el lenguaje que se está usando.
+Escrí una cantidad de programas considerables en Python -- analizá (parse)
+algunos archivos de texto, escribí un juego de adivinanzas o un programa
+de entradas de diario, o algo. Ponte cómodo con las secuencias de caracteres
+que representan textos (strings) y la manipulación de listas.
+Sepa cómo funciona <code class="docutils literal notranslate"><span class="pre">import</span></code> (importar) -- intenta escribir un programa que
+se extienda a varios archivos fuente. Escribe tus propias funciones, y practica
+manipular números y caracteres; sepa cómo convertir de una a otra.
+Llega al punto en que la sintaxis para usar listas y diccionarios es algo instintivo--
+no querés tener que ejecutar la documentación cada vez que necesitas dividir una lista
+u ordernar un juego de llaves. Resiste la tentación de correr a una lista de emails,
+comp.lang.python, o IRC cuando te encuentres en un problema. En lugar de eso, enciende
+el interperte y juega con el problema por unas horas. Imprime el <a class="reference external" href="http://www.brunningonline.net/simon/python/quick-ref2_0.html">Python
+2.0 Quick Reference</a> y conservalo junto a la computadora.</p>
+<p>Esto puede sonar increiblemente aburrido, pero la confianza que vas a ganar al
+familiarizarte con python hará maravillas cuando se trate de escribir tu propio
+juego. El tiempo que dediques a escribir código python de forma instintiva no
+será nada en comparación con el tiempo que ahorrarás al escribir código real.</p>
+</section>
+<section id="reconoce-que-partes-de-pygame-necesitas-realmente">
+<h3>Reconoce qué partes de pygame necesitás realmente.<a class="headerlink" href="#reconoce-que-partes-de-pygame-necesitas-realmente" title="Link to this heading">¶</a></h3>
+<p>Ver el revoltijo de clases en la parte superior de la documentación del índice
+de documentación de pygame puede ser confuso. Lo más importante es darse cuenta
+de que se puede hacer mucho con tan solo un pequeño subconjunto de funciones.
+Existen muchas clases que probablemente nunca uses -- en un año, yo no he tocado
+las funciones  <code class="docutils literal notranslate"><span class="pre">Channel</span></code>, <code class="docutils literal notranslate"><span class="pre">Joystick</span></code>, <code class="docutils literal notranslate"><span class="pre">cursors</span></code>, <code class="docutils literal notranslate"><span class="pre">Userrect</span></code>, <code class="docutils literal notranslate"><span class="pre">surfarray</span></code>
+o <code class="docutils literal notranslate"><span class="pre">version</span></code>.</p>
+</section>
+<section id="sepa-que-es-una-surface-superficie">
+<h3>Sepa qué es una Surface (superficie)<a class="headerlink" href="#sepa-que-es-una-surface-superficie" title="Link to this heading">¶</a></h3>
+<p>La parte más importante de pygame es la Surface (superficie). La Surface puede
+pensarse como una hoja de papel en blanco. Se pueden hacer muchas cosas con la
+Surface -- se pueden dibujar líneas, colorear partes de ella con colores, copiar
+imágenes hacia y desde ella, y establecer o leer píxeles indivduales de colores
+en ella. Una Surface puede ser de cualquier tamaño (dentro de lo lógico) y puede
+haber tantas como quieras (de nuevo, dentro de lo razonable).
+Una Surface es especial -- la que vayas a crear con <code class="docutils literal notranslate"><span class="pre">pygame.display.set_mode()</span></code>.
+Esta 'display surface' (surface de visualización) representa la pantalla;
+lo que sea que hagas en ella aparecerá en la pantalla del usuario. Solo puedes
+tener una de esas -- esa es una limitación de SDL, no de pygame.</p>
+<p>Entonces, ¿cómo crear Surfaces? Como mencioné arriba, la Surface especial se
+crea con <code class="docutils literal notranslate"><span class="pre">pygame.display.set_mode()</span></code>.  Se puede crear una surface que
+contenga una imagen usando <code class="docutils literal notranslate"><span class="pre">image.load()</span></code>, o podés crear una surface que
+contenga texto con <code class="docutils literal notranslate"><span class="pre">font.render()</span></code>. Incluso se puede crear una surface que
+no contenga nada en absoluto con <code class="docutils literal notranslate"><span class="pre">Surface()</span></code>.</p>
+<p>La mayoría de las funciones de Surface no son críticas. Sólo es necesario
+aprender <code class="docutils literal notranslate"><span class="pre">blit()</span></code>, <code class="docutils literal notranslate"><span class="pre">fill()</span></code>, <code class="docutils literal notranslate"><span class="pre">set_at()</span></code> y <code class="docutils literal notranslate"><span class="pre">get_at()</span></code>,  y vas a estar
+bien.</p>
+</section>
+<section id="usa-surface-convert">
+<h3>Usa surface.convert().<a class="headerlink" href="#usa-surface-convert" title="Link to this heading">¶</a></h3>
+<p>Cuando yo leí por primera vez la documentación para <code class="docutils literal notranslate"><span class="pre">surface.convert()</span></code>, no pensé
+que fuera algo de lo que tuviera que preocuparme. 'Sólo voy a usar PNGs, por lo
+tanto todo o que haga será en ese formato. Entonces no necesito <code class="docutils literal notranslate"><span class="pre">convert()</span></code>';.
+Resultó ser que estaba muy, muy equivocado.</p>
+<p>El 'format' (formato) al que <code class="docutils literal notranslate"><span class="pre">convert()</span></code> se refiere no es el formato del archivo
+(por ejemplo, PNG, JPEG, GIF), es lo que se llama el 'píxel format' (formato pixel).
+Esto se refiere a la forma particular en la que una Surface registra colores
+individuales en un píxel especifico.  Si el formato de la Surface (Surface format)
+no es el mismo que el formato de visualización (display format), SDL tendrá que
+convertirlo sobre la marcha para cada blit -- un proceso que consume bastante
+tiempo. No te preocupes demasiado por la explicación; solo ten en cuenta que
+<code class="docutils literal notranslate"><span class="pre">convert()</span></code> es necesario si querés que haya velocidad en tus blits.</p>
+<p>¿Cómo se usa convert? Sólo hay que hacer una call (llamada) creando la Surface
+con la función <code class="docutils literal notranslate"><span class="pre">image.load()</span></code>. En vez de hacer únicamente:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">surface</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;foo.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Haz:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">surface</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;foo.png&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">convert</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Es así de fácil. Lo único que se necesita es hacer una de esas calls (llamadas)
+por Surface, cuando cargues una imagen del disco.
+It's that easy. You just need to call it once per surface, when you load an
+image off the disk.  Estará satisfecho con los resultados; veo al rededor de
+un 6x aumento de la velocidad de blitting llamando (haciendo la call) <code class="docutils literal notranslate"><span class="pre">convert()</span></code>.</p>
+<p>La única vez que no vas a querer usar <code class="docutils literal notranslate"><span class="pre">convert()</span></code> es cuando realmente necesitas
+tener el control absoluto sobre al formato interno de una imagen -- digamos que
+estás escribiendo un programa de conversión de imagen o algo así, y
+necesitás asegurarte que el archivo de salida tenga el mismo formato píxeles
+que el archivo de entrada. Si estás escribiendo un juego, necesitás velocidad.
+Usa <code class="docutils literal notranslate"><span class="pre">convert()</span></code>.</p>
+</section>
+<section id="animacion-rect-sucia">
+<h3>Animación rect &quot;sucia&quot;.<a class="headerlink" href="#animacion-rect-sucia" title="Link to this heading">¶</a></h3>
+<p>La causa más común de frecuencias de cuadros inadecuadas en los programas Pygame
+resulta de malinterpretar la función <code class="docutils literal notranslate"><span class="pre">pygame.display.update()</span></code>. Con pygame, con
+simplemente dibujar algo en la Surface de visualización no hace que aparezca en la
+pantalla -- necesitas hacer un llamado a <code class="docutils literal notranslate"><span class="pre">pygame.display.update()</span></code>.  Hay tres
+formas de llamar a esta función:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pygame.display.update()</span></code> -- Esto actualiza toda la ventana (o toda la pantalla para visualizaciones en pantalla completa).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pygame.display.flip()</span></code> -- Esto hace lo mismo, y también hará lo correcto si estás usando <code class="docutils literal notranslate"><span class="pre">double-buffered</span></code> aceleración de hardware, que no es así, entonces sigamos ...</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pygame.display.update(a</span> <span class="pre">rectangle</span> <span class="pre">or</span> <span class="pre">some</span> <span class="pre">list</span> <span class="pre">of</span> <span class="pre">rectangles)</span></code> -- Esto actualiza solo las áreas rectangulares de la pantalla que especifiques.</p></li>
+</ul>
+</div></blockquote>
+<p>La mayoría de la gente nueva en programación gráfica usa la primera opción --
+ellos actualizan la pantalla completa en cada cuadro. El problema es que esto
+es inaceptablemente lento para la mayoría de la gente. Hacer una call a
+<code class="docutils literal notranslate"><span class="pre">update()</span></code> toma 35 milisegundos en mi máquina, lo cual no parece mucho, hasta
+que te das cuenta que 1000 / 35 = 28 cuadros por segundo <em>máximo</em>. Y eso es
+sin la lóagica del juego, sin blits, sin entrada (input) , sin IA, nada. Estoy
+aquí sentado actualizando la pantalla, y 28 fps (frames per second - cuadros
+por segundo) es mi máximo de cuadros por segundo. Ugh.</p>
+<p>La solucion es llamada 'dirty rect animation' o 'animación de rect sucia'.
+En vez de actualizar la pantalla completa en cada cuadro, solo se actualizan
+las partes que cambiaron desde el último cuadros. Yo hago esto al hacer un
+seeguimiento de esos rectángulos en una lista, luego llamando a <code class="docutils literal notranslate"><span class="pre">update(the_dirty_rectangles)</span></code>
+al final del cuadro. En detalle para un sprite en movimiento, yo:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Blit una parte del fondo sobre la ubicación actual del sprite, borrándolo.</p></li>
+<li><p>Añado el rectángulo de la ubicación actual a la lista llamada dirty_rects.</p></li>
+<li><p>Muevo el sprite.</p></li>
+<li><p>Dibujo (Draw) el sprite en su nueva ubicación.</p></li>
+<li><p>Agrego la nueva ubicación del sprite a mi lista de dirty_rects.</p></li>
+<li><p>Llamo a <code class="docutils literal notranslate"><span class="pre">display.update(dirty_rects)</span></code></p></li>
+</ul>
+</div></blockquote>
+<p>La diferenci aen velocidad es asombrosa. Tengan en consideración que <a class="reference external" href="https://www.pygame.org/shredwheat/solarwolf/index.shtml">SolarWolf</a>
+tiene docenas de sprites en constante movimiento que se actualizan sin problemas,
+y aún así le queda suficiente tiempo para mostrar un campo estelar de paralaje
+en el fondo, y también actualizarlo.</p>
+<p>Hay dos casos en que esta técnica no funciona. El primero es cuando toda la ventana
+o la pantalla es siendo actualizada realmente en cada cuadro -- pensá en un motor
+de desplazamiento como un juego de estrategia en tiempo real o un desplazamiento
+lateral. Entonces, ¿qué hacés en ese caso? Bueno, la respuesta corta es -- no
+escribas este tipo de juegos en pygame. La respuesta larga es desplazarse en pasos
+de varios píxeles a la vez; no intentes hacer del desplazamiento algo
+perfectamente suave. El jugador apreciará un juego que se desplaza rápidamente y
+no notará demasiado el fondo saltando.</p>
+<p>Una nota final -- no todo juego requeire altas frecuencias de cuadros. Un
+juego de guerra estratégico podría funcionar fácilmente con solo unas pocas
+actualizaciones por segundo -- en este caso, la complejidad agregada de la
+animación de rect sucio (dirty rect animation) puede no ser necesaria.</p>
+</section>
+<section id="no-hay-regla-seis">
+<h3>NO hay regla seis.<a class="headerlink" href="#no-hay-regla-seis" title="Link to this heading">¶</a></h3>
+</section>
+<section id="los-surfaces-de-hardware-son-mas-problematicos-de-lo-que-valen">
+<h3>Los surfaces de hardware son más problemáticos de lo que valen.<a class="headerlink" href="#los-surfaces-de-hardware-son-mas-problematicos-de-lo-que-valen" title="Link to this heading">¶</a></h3>
+<p><strong>Especialmente en pygame 2, porque HWSURFACE ahora no hace nada</strong></p>
+<p>Si estuviste mirando las distintas flags (banderas) que se pueden
+usar con <code class="docutils literal notranslate"><span class="pre">pygame.display.set_mode()</span></code>, puede que hayas pensado
+lo siguiente: <cite>Hey, HWSURFACE! Bueno, quiero eso -- a quién no le
+gusta la acelación de hardware. Ooo... DOUBLEBUF; bueno, eso suena
+rápido, ¡supongo que yo también quiero eso!</cite>.  No es tu culpa;
+hemos sido entrenados por años en juegos 3D como para creer que
+la aceleración de hardware es buena, y el rendering (representación)
+del software es lento.</p>
+<p>Desafortunadamente, el rendering de hardware viene con una larga lista
+de inconvenientes:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Solo funciona en algunas plataformas. Las máquinas con Windows generalmente pueden obtener surfaces (superficies) si se les solicita. La mayoría de otras plataformas no pueden. Linux, por ejemplo, puede proporcionar una surface de hardware si X4 está isntalado, si DGA2 está funcionando correctamente, y si las lunas están alineadas correctamente. Si la surface de hardware no está disponible, SDL va a proporcionar silenciosamente una surface de software en su lugar.</p></li>
+<li><p>Solo funciona en pantalla completa.</p></li>
+<li><p>Complica el acceso por píxel. Si tenés una surface de hardware, necesitas bloquear la superficie antes de escribir o leer valores de píxel en ella. Si no lo haces, Cosas Malas Suceden. Luego vas a necesitar desbloquear rápidamente la superficie nuevamente antes de que el SO se confunda y comience a entrar en pánico. La mayor parte de los procesos en pygame están automatizados, pero es algo más a tener en cuenta.</p></li>
+<li><p>Pierdes el puntero del mouse. Si especificás <code class="docutils literal notranslate"><span class="pre">HWSURFACE</span></code> (y de hecho lo obtienes) tu puntero, por lo general, simplemente desaparecerá (o peor, se quedará en un estado parpadeante por ahí). Deberás crear un sprite para que actúe como puntero manual, y deberás preocuparte por la aceleración y la sensibilidad del puntero. ¡Qué molestia!</p></li>
+<li><p>Podría ser más lento de todos modos. Muchos controladores no están acelerados para los tipos de dibujos que hacemos, y dado que todo tiene que ser blitteado por el bus de video (a menos que también puedas meter la la surface de origen en la memoria de video), puede que termine siendo más lento que el acceso al software de todos modos.</p></li>
+</ul>
+</div></blockquote>
+<p>El rendering (representación) de hardware tiene su lugar. Funciona de manera
+bastante confiable en Windows, por lo que si no estás interesado en el
+rendimiento de multiplataformas, puede proporcionarte un aumento sustancial
+de la velocidad. Sin embargo, tiene un costo -- mayor dolor de cabeza y
+complejidad. Es mejor apegarse al viejo y confiable <code class="docutils literal notranslate"><span class="pre">SWSURFACE</span></code> hasta
+que estés seguro de lo que estás haciendo.</p>
+</section>
+<section id="no-te-distraigas-con-problemas-secundarios">
+<h3>No te distraigas con problemas secundarios.<a class="headerlink" href="#no-te-distraigas-con-problemas-secundarios" title="Link to this heading">¶</a></h3>
+<p>A veces, los nuevos programadores dedican mucho tiempo preocupandose sobre
+problemas que no son realmente críticos para el éxito de su juego. El deseo
+de arreglar los problemas secundarios es entendible, pero al principio en el
+proceso de creación de un juego, ni siquiera puedes saber cuáles son las
+preguntas importantes, mucho menos qué respuestas deberías elegir. El
+resultado puede ser un montón de prevariaciones innecesarias.</p>
+<p>Por ejemplo, consideren la pregunta de cómo organizar los archivos gráficos.
+¿Debería cada cuadro tener su propio archivo gráfico, o cada sprite? ¿Quizás
+todos los gráficos se deberían comprimir en un archivo? Se ha perdido una
+gran cantidad de tiempo en muchos proyectos, preguntándose estas preguntas
+en lista de correo, debatiendo las respuestas, haciendo perfiles, etc, etc.
+Este es un tema secundario; cualquier cantidad de tiempo invertido en
+discutir eso, debería haber sido usado en escribir el código del juego real.</p>
+<p>El idea es que es mucho mejor tener una solución 'bastante buena' que haya
+sido implementada, que una solucion perfecta que nunca se haya llegado a
+escribir.</p>
+</section>
+<section id="los-rects-son-tus-amigos">
+<h3>Los rects son tus amigos.<a class="headerlink" href="#los-rects-son-tus-amigos" title="Link to this heading">¶</a></h3>
+<p>El envoltorio de Pete Shinners puede tener efectos alfa geniales y
+velocidades rápidas de blitting, pero tengo que admitir que mi parte
+favorita de pygame es la humilde clase <code class="docutils literal notranslate"><span class="pre">Rect</span></code>. Un rect es simplemente
+un rectángulo -- definido solo por la posición de su esquina superior
+izquierda, su ancho y su altura. Muchas funciones de pygame toman rects
+como argumentos, y ellas solo hacen 'rectstyles', una secuencia que tiene
+los mismos valores que un rect. Entonces si necesito un rectángulo que
+defina el área entre 10, 20 y 40, 50, puedo hacer cualquier de las
+siguientes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
+<span class="n">rect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Rect</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
+<span class="n">rect</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">rect</span> <span class="o">=</span> <span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Sin embargo, si usas cualquiera de las primeras tres versiones, obtendrás
+accesso a las funciones de utilidad del rect. Estas incluyen funciones para
+mover, encoger e inflar los rects, encontrar la union de dos rects, y una
+variedad de funciones de detección de colisión.</p>
+<p>Por ejemplo, supongamos que yo quiero obtener una lista de todos los sprites
+que contiene un punto (x,y) -- quizás el jugador clickeó ahí, o quizás esa es
+la ubicación actual de una bala. Es simple si cada sprite tiene un miembro
+.rect -- solo hay que hacer:</p>
+<blockquote>
+<div><p>sprites_clicked = [sprite for sprite in all_my_sprites_list if sprite.rect.collidepoint(x, y)]</p>
+</div></blockquote>
+<p>Los rects no tienen otra relación con los surfaces o con las funciones gráficas,
+aparte del hecho de que puedes usarlos como argumentos. También se pueden usar en
+lugares que no tienen nada que ver con gráficos, pero aún así deben ser definidos
+como rectángulos. En cada proyecto descrubro algunos lugares nuevos donde usar
+rects donde nunca pensé que los necesitaría.</p>
+</section>
+<section id="no-te-molestes-con-la-deteccion-de-colision-de-pixel-perfecto">
+<h3>No te molestes con la detección de colisión de píxel perfecto.<a class="headerlink" href="#no-te-molestes-con-la-deteccion-de-colision-de-pixel-perfecto" title="Link to this heading">¶</a></h3>
+<p>Así que, tenés tus sprites moviendose y necesitás saber si se están chocando entre sí. Es tentador escribir algo como lo siguiente:ite something like the following:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Checkear si los rects están en colisión. Si no lo están, ignorarlos.</p></li>
+<li><p>Para cada píxel en el área de superposición, ver si los píxeles correspondientes de ambos sprites son opacos. Si es así, hay una colisión.</p></li>
+</ul>
+</div></blockquote>
+<p>Hay otras formas de hacer esto, con ???????? coordinando máscaras de sprite y
+así sucesivamente, pero de cualquier forma en que se haga en pygame,
+probablemente sea demasiado lento. Para la mayoría de los juego probablemente
+sea mejor hacer solo un &quot;sub-rect de colisión&quot; -- esto es, crear un rect por
+cada sprite que es un poco más pequeño que la imagen real, y usar eso para
+colisiones. Esto va a resultar más rápido y, en la mayoría de los casos, el
+jugador no va a notar la imprecisión.
+There are other ways to do this, with ANDing sprite masks and so on, but any
+way you do it in pygame, it's probably going to be too slow. For most games,
+it's probably better just to do 'sub-rect collision' -- create a rect for each
+sprite that's a little smaller than the actual image, and use that for
+collisions instead. It will be much faster, and in most cases the player won't
+notice the imprecision.</p>
+</section>
+<section id="gestion-del-subsistema-de-eventos">
+<h3>Gestión del subsistema de eventos.<a class="headerlink" href="#gestion-del-subsistema-de-eventos" title="Link to this heading">¶</a></h3>
+<p>El sistema de eventos de Pygame es un poco truculento. Hay en realidad dos formas
+diferntes de saber qué está haciendo un dispositivo de entrada (teclado, mouse,
+o joystick).</p>
+<p>La primera es directamente comprobar el estado del dispositivo. Esto se hace
+mediante la llamada, digamos, <code class="docutils literal notranslate"><span class="pre">pygame.mouse.get_pos()</span></code> o
+<code class="docutils literal notranslate"><span class="pre">pygame.key.get_pressed()</span></code>.
+Esto te indicará el estado de tu dispositivo <em>en el momento en que llames a
+la función</em></p>
+<p>El segundo método usa la cola de eventos de SDL. Esta cola es una lista de
+eventos -- eventos se agregan a la lista al ser detectados, y se eliminan
+de la cola mientras se leen.</p>
+<p>Hay ventajas y desventajas para cada sistema. Comprobación de estado (sistema 1)
+(state-checking) aporta precisión -- sabés exactamente cuándo se realizó la
+entrada -- si <code class="docutils literal notranslate"><span class="pre">mouse.get_pressed([0])</span></code> (mouse fue presionado) es 1, eso significa
+que el botón izquierdo del mpuse está abajo <em>justo en este momento</em>. La cola de
+eventos meramente reporta que el mouse estuvo abajo en algún momento del pasado;
+si revisas la cola con bastante frecuencia, eso puede estar bien, pero si te
+demorás en verificarlo con otro código, latencia de entrada puede incrementar.
+Otra ventaja del sistema de comprobación de estado es que detecta &quot;acordes&quot;
+fácilmente; es decir, varios estados al mismo tiempo. Si querés saber si las
+teclas <code class="docutils literal notranslate"><span class="pre">t</span></code> y la <code class="docutils literal notranslate"><span class="pre">f</span></code> están ambas presionadas al mismo tiempo, sólo hay que
+checkear:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">[</span><span class="n">K_t</span><span class="p">]</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">get_pressed</span><span class="p">[</span><span class="n">K_f</span><span class="p">]):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sip!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Sin embargo, en el sistema de colas, cada pulsación de tecla llega a la cola
+como un evento completamente separado, entonces será necesario recordar que
+la tecla <code class="docutils literal notranslate"><span class="pre">t</span></code> estuvo presionada y que aún no había sido soltada mientras la
+tecla <code class="docutils literal notranslate"><span class="pre">f</span></code> fue presionada. Un poco más complicado.</p>
+<p>Sin embargo, el sistema de estados tiene una gran desventaja. Solo informa
+el estado del dispositivo al momento en que es llamado; si el usuario clickea
+el botón del mouse y lo suelta justo antes del llamado a <code class="docutils literal notranslate"><span class="pre">mouse.get_pressed()</span></code>,
+el botón del mouse va a devolver un 0 -- <code class="docutils literal notranslate"><span class="pre">get_pressed()</span></code> falló completamente
+en detectar la pulsación del botón del mouse. Dos events, <code class="docutils literal notranslate"><span class="pre">MOUSEBUTTONDOWN</span></code>
+y <code class="docutils literal notranslate"><span class="pre">MOUSEBUTTONUP</span></code>, seguirán esperando en la cola de eventos a ser
+recuperados y procesados.</p>
+<p>La lección es la siguiente: elegí el sistema que cumpla con tus requisitos. Si
+no hay mucho sucediendo en tu loop -- supongamos, estás sentado en un bucle de
+<code class="docutils literal notranslate"><span class="pre">while</span> <span class="pre">True</span></code>, esperando una entrada, usa <code class="docutils literal notranslate"><span class="pre">get_pressed()</span></code> u otra función de
+estado; la latencia será menor. Por otro lado, si cada pulsación de tecla es
+crucial, pero la latencia no es tan importante -- por ejemplo, el usuario está
+escribiendo algo en un cuadro de edición, usá la cola de eventos. Algunas
+pulsaciones de tecla pueden retrasarse un poco, pero al menos van a aparecer
+todas.</p>
+<p>Una nota sobre <code class="docutils literal notranslate"><span class="pre">event.poll()</span></code> vs. <code class="docutils literal notranslate"><span class="pre">wait()</span></code> -- <code class="docutils literal notranslate"><span class="pre">poll()</span></code> puede parecer mejor
+ya que no impide al programa de hacer otra cosa mientras está esperando la
+entrada --  <code class="docutils literal notranslate"><span class="pre">wait()</span></code> suspende el programa hasta que reciba el evento.
+Sin embargo, <code class="docutils literal notranslate"><span class="pre">poll()</span></code> consumirá el 100% del tiempo disponible del CPU mientras
+se esté ejecutando y llenará la cola de eventos con <code class="docutils literal notranslate"><span class="pre">NOEVENTS</span></code>.  Para
+seleccionar solo los tipo de eventos que resultan de interés usa <code class="docutils literal notranslate"><span class="pre">set_blocked()</span></code>,
+la cola será mucho más manejable.</p>
+</section>
+<section id="colorkey-vs-alpha">
+<h3>Colorkey vs. Alpha.<a class="headerlink" href="#colorkey-vs-alpha" title="Link to this heading">¶</a></h3>
+<p>Hay mucha confusión en torno a estas dos técnicas, y gran parte de esto proviene
+de la terminología usada.</p>
+<p>'Colorkey blitting' (blitting de la clave de color) implica decirle a pygame que
+todos lso píxeles de cierto color de una determinada imagen son transparentes en
+vez del color que realmente sean. Estos píxeles transparentes no son blitteados
+cuando el resto de la imagen es blitteada y entonces no oscurecen el fondo. Así
+es como hacemos los sprites que no son de forma rectangular. Simplemente llamamos
+a <code class="docutils literal notranslate"><span class="pre">surface.set_colorkey(color)</span></code>, donde el color es una tupla RGB, supongamos
+(0,0,0). Esto haría que cada píxel en la imagen de origen transparente en vez de
+negro.</p>
+<p>'Alpha' es diferente, y como en dos sabores. 'Image alpha' (imagen alfa) que
+aplica a la imagen completa, y es probablemente lo que quieras. Propiamente
+conocido como 'translucidez', alpha causa que cada píxel en la imagen de origen
+sea solo <em>parcialmente</em> opaco. Por ejemplo, si configuras el alfa de una surface
+en 192 y después lo blitteas (convertis) en un fondo, 3/4 del color de cada
+píxel provendrá de la imagen de origan, y 1/4 del fondo. Alfa se mide de 255 a 0,
+donde 0 es completamente transparente, y 255 es completamente opaco. Nótese que
+el blitting con colorkey y alfa (colorkey and alfa blitting) pueden combinarse --
+esto produce una imagen completamente transparete en algunos lugares y
+semi-transparente en otros.</p>
+<p>'Per-pixel alpha' ('Alfa por pixel') es el otro tipo de alfa, y es más complicado
+Básicamente, cada píxel de la imagen de origen tiene su propio valor alfa, de 0
+a 1. Cada píxel, por lo tanto, puede tener una opacidad diferente cuando se
+blittea (proyecta) sobre el fondo. Este tipo de alfa no se puede mezclar con
+la proyección (el blitting) de la clave de color, y anula el 'per-image' alfa.
+El alfa por píxel (per-pixel alfa) es raramente usado en juego, y para usarlo
+tenes que guardar la imagen de origen en un editor gráfico con un <em>canal alpha</em>
+especial. Es complicado -- no lo usen todavía.</p>
+</section>
+<section id="haz-cosas-a-la-manera-de-pythony">
+<h3>Haz cosas a la manera de pythony.<a class="headerlink" href="#haz-cosas-a-la-manera-de-pythony" title="Link to this heading">¶</a></h3>
+<p>Una nota final (no es la menos importante, simplemente viene al final) Pygame
+es un envoltorio bastante liviano alrededor de SDL, que a su vez es un ligero
+envoltorio alrededor de las calls (llamadas) de gráficos del sistema operativo
+nativo. Las posibilidades son muy buenas de que si tu código sigue lento,
+habiendo seguido las indicaciones que mencioné arriba, entonces el problema
+yace en la forma en que estás direccionando tus datos en python.
+Algunos modismos simplemente van a ser lentos en python sin importar lo que hagas.
+Afortunadamente, python es un lenguaje muy claro -- si un fragmento del código se
+ve extraño o difícil de manejar, es probable que su velocidad también se pueda
+mejorar. Lée <a class="reference external" href="http://www-rohan.sdsu.edu/~gawron/compling/course_core/python_intro/intro_lecture_files/fastpython.html">Python Performance Tips</a> para obtener excelentes consejos sobre
+cómo puede mejorar la velocidad del código. Dicho esto, la optimización prematura
+es la razí de todos los males; si simplemente no es lo suficientemente rápido
+no tortures el código intentando hacerlo más rápido. Algunas cosas simplemente
+no están destinadas a ser. :)</p>
+<p>¡Ya está! Ahora sabés prácticamente todo lo que yo sé sobre el uso de pygame.
+Ahora, ¡ve a escribir ese juego!</p>
+<hr class="docutils" />
+<p><em>David Clark es un ávido usuario de pygame y es editor de Pygame Code
+Repository, una vidriera del códigos de juegos en python suministrado por la
+comunidad. Él es también el autor de Twitch, un juego de arcade completamente
+promedio de pygame.</em></p>
+</section>
+</section>
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/tutorials/GuiaNewbie.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Índice General"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="right" >
+          <a href="IniciarImportar.html" title="Tutoriales de Pygame - Importar e Inicializar"
+             accesskey="N">siguiente</a> |</li>
+        <li class="right" >
+          <a href="CrearJuegos.html" title="Crear Juegos con Pygame"
+             accesskey="P">anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.6.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Guía de Pygame para Newbies</a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

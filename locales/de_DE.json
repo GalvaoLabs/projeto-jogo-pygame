@@ -60,7 +60,7 @@
     "menu.settings": "Einstellungen",
     "menu.quit": "Beenden",
     "menu.goal": "Ziel: {goal:compact} Nettovermögen erreichen. Geh nicht pleite.",
-    "menu.hint": "TAB wechselt zwischen Dashboard / Büro   |   ESC öffnet dieses Menü",
+    "menu.hint": "TAB wechselt Dashboard / Büro   |   1-5 Tabs   |   E beendet den Monat   |   M Ton   |   F11 Vollbild   |   ESC Menü",
     "nav.dashboard": "Dashboard",
     "nav.office": "Büro",
     "nav.menu": "Menü",
@@ -297,6 +297,9 @@
     "board.goal": "Unternehmensziel",
     "board.progress": "{a:money} von {b:money}",
     "board.complete": "{p:pct1} erreicht",
-    "settings.language_label": "Language / Idioma"
+    "settings.language_label": "Language / Idioma",
+    "settings.options": "Optionen",
+    "settings.sound": "Ton",
+    "settings.volume": "Lautstärke"
   }
 }

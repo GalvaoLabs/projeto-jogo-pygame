@@ -1,4 +1,4 @@
-"""Persistent user settings (language, fullscreen, volume) stored as JSON.
+"""Persistent user settings (language, fullscreen, sound, volume) stored as JSON.
 
 * Missing file  -> created with defaults on first save.
 * Corrupt file / wrong types / unknown language -> defaults for the bad fields; never raises.
@@ -7,16 +7,22 @@
 import json
 import os
 
-from systems.paths import user_config_dir
+from systems.storage import FileStorage, default_storage
 
-DEFAULTS = {"language": "pt_BR", "fullscreen": False, "volume": 80}
+DEFAULTS = {"language": "pt_BR", "fullscreen": False, "sound": True, "volume": 80}
 FILE_NAME = "settings.json"
 
 
 class SettingsManager:
-    def __init__(self, path=None, valid_languages=None):
-        """``valid_languages``: optional callable returning the codes a user may select."""
-        self.path = path or os.path.join(user_config_dir(), FILE_NAME)
+    def __init__(self, path=None, valid_languages=None, storage=None):
+        """``path``: explicit settings file (tests, portable installs). Without it the platform's
+        default storage is used. ``valid_languages``: callable returning the selectable codes."""
+        if storage is not None:
+            self.store, self.name = storage, FILE_NAME
+        elif path:
+            self.store, self.name = FileStorage(os.path.dirname(path) or "."), os.path.basename(path)
+        else:
+            self.store, self.name = default_storage(), FILE_NAME
         self._valid_languages = valid_languages
         self.data = dict(DEFAULTS)
         self.warnings = []
@@ -27,13 +33,12 @@ class SettingsManager:
         self.data = dict(DEFAULTS)
         self.warnings = []
         raw = None
-        try:
-            with open(self.path, encoding="utf-8") as f:
-                raw = json.load(f)
-        except FileNotFoundError:
-            pass
-        except (OSError, ValueError) as exc:
-            self.warnings.append(f"settings unreadable ({exc}); using defaults")
+        text = self.store.read(self.name)
+        if text is not None:
+            try:
+                raw = json.loads(text)
+            except ValueError as exc:
+                self.warnings.append(f"settings unreadable ({exc}); using defaults")
         if raw is not None and not isinstance(raw, dict):
             self.warnings.append("settings file is not a JSON object; using defaults")
             raw = None
@@ -50,8 +55,9 @@ class SettingsManager:
             if lang != DEFAULTS["language"]:
                 self.warnings.append(f"invalid language {lang!r}; using {DEFAULTS['language']}")
             d["language"] = DEFAULTS["language"]
-        if not isinstance(d.get("fullscreen"), bool):
-            d["fullscreen"] = DEFAULTS["fullscreen"]
+        for key in ("fullscreen", "sound"):
+            if not isinstance(d.get(key), bool):
+                d[key] = DEFAULTS[key]
         vol = d.get("volume")
         if isinstance(vol, bool) or not isinstance(vol, (int, float)):
             d["volume"] = DEFAULTS["volume"]
@@ -59,18 +65,12 @@ class SettingsManager:
             d["volume"] = int(max(0, min(100, vol)))
 
     def save(self) -> bool:
-        """Atomic write. Returns False (never raises) if the location is not writable."""
-        try:
-            os.makedirs(os.path.dirname(self.path) or ".", exist_ok=True)
-            tmp = self.path + ".tmp"
-            with open(tmp, "w", encoding="utf-8") as f:
-                json.dump(self.data, f, ensure_ascii=False, indent=2)
-                f.write("\n")
-            os.replace(tmp, self.path)
+        """Never raises. Returns False if the location is not writable."""
+        text = json.dumps(self.data, ensure_ascii=False, indent=2) + "\n"
+        if self.store.write(self.name, text):
             return True
-        except OSError as exc:
-            self.warnings.append(f"could not save settings: {exc}")
-            return False
+        self.warnings.append("could not save settings")
+        return False
 
     # ------------------------------------------------------------ access
     def get(self, key):
@@ -89,6 +89,10 @@ class SettingsManager:
     @property
     def fullscreen(self):
         return self.data["fullscreen"]
+
+    @property
+    def sound(self):
+        return self.data["sound"]
 
     @property
     def volume(self):

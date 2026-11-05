@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Tutoriales Pygame - Introducción al Módulo de Cámara &#8212; pygame v2.6.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=a854c6a8" />
+    <script src="../_static/documentation_options.js?v=b1d3d371"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/translations.js?v=d190bf04"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="Tutorial de Pygame - Ejemplo del Chimpancé, Línea Por Línea" href="ChimpanceLineaporLinea.html" />
+    <link rel="prev" title="pygame.cursors" href="../referencias/cursors.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png" alt="logo image"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><strong>Most useful stuff</strong>:
+	    <a href="../referencias/color.html">Color</a>
+	  </p>
+
+	  <p class="bottom"><strong>Advanced stuff</strong>:
+	    <a href="../referencias/cursors.html">cursors</a> | 
+	    <a href="../referencias/bufferproxy.html">BufferProxy</a>
+	  </p>
+
+	  <p class="bottom"><strong>Other</strong>:
+	    <a href="../referencias/camera.html">camera</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="tutoriales-pygame-introduccion-al-modulo-de-camara">
+<section id="introduccion-al-modulo-de-camara">
+<h2>Introducción al Módulo de Cámara<a class="headerlink" href="#introduccion-al-modulo-de-camara" title="Link to this heading">¶</a></h2>
+<dl class="docinfo field-list simple">
+<dt class="field-odd">Autor<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Nirav Patel</p>
+</dd>
+<dt class="field-even">Contacto<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="mailto:nrp&#37;&#52;&#48;eclecti&#46;cc">nrp<span>&#64;</span>eclecti<span>&#46;</span>cc</a></p>
+</dd>
+<dt class="field-odd">Traducción al español<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Estefanía Pivaral Serrano</p>
+</dd>
+</dl>
+<p>Pygame 1.9 viene con soporte para cámaras interconectadas, lo que nos permite
+capturar imagenes quietas, ver transmiciones en vivo y hacer visión computarizada.
+Este tutorial cubrirá todos estos casos de uso, proporcionando ejemplos de código
+que pueden usar para basar sus propias apps o juegos. Pueden consultar la
+documentación de referencia por una API completa:
+<a class="reference internal" href="../referencias/camera.html#module-pygame.camera" title="pygame.camera: módulo de pygame para el uso de la cámara"><code class="xref py py-mod docutils literal notranslate"><span class="pre">reference</span> <span class="pre">documentation</span></code></a></p>
+<div class="admonition note">
+<p class="admonition-title">Nota</p>
+<p>A partir de Pygame 1.9 el módulo de cámara ofrece soporte nativo para
+cámaras que usan v4l2 en Linux. Existe soporte para otras plataformas via
+Videocapture o OpenCV, pero esta guía se enfocará en en módulo nativo.
+La mayor parte del código será válido para otras plataformas, pero
+ciertas cosas como los controles no funcionarán. El módulo está también
+marcado como <strong>EXPERIMENTAL</strong>, lo que significa que la API podría cambiar
+las versiones posteriores.</p>
+</div>
+<section id="importacion-e-inicializacion">
+<h3>Importación e Inicialización<a class="headerlink" href="#importacion-e-inicializacion" title="Link to this heading">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pygame</span>
+<span class="kn">import</span> <span class="nn">pygame.camera</span>
+<span class="kn">from</span> <span class="nn">pygame.locals</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Dado que el módulo de cámara es opcional, necesita ser importado e inicializado
+manualmente como se muestra arriba.</p>
+</section>
+<section id="captura-de-una-sola-imagen">
+<h3>Captura de una sola imagen<a class="headerlink" href="#captura-de-una-sola-imagen" title="Link to this heading">¶</a></h3>
+<p>Ahora repasaremos el caso más simple en el que abrimos una cámara y capturamos
+un cuadro como Surface. En el siguiente ejemplo, asumimos que hay una cámara
+en /dev/video0 en la computadora, y la inicializamos con un tamaño de 640 por 480.
+La Surface llamada 'image' es lo que sea que la cámara estaba viendo cuando
+get_image() fue llamada.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cam</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">Camera</span><span class="p">(</span><span class="s2">&quot;/dev/video0&quot;</span><span class="p">,(</span><span class="mi">640</span><span class="p">,</span><span class="mi">480</span><span class="p">))</span>
+<span class="n">cam</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">cam</span><span class="o">.</span><span class="n">get_image</span><span class="p">()</span>
+</pre></div>
+</div>
+<section id="listado-de-camaras-conectadas">
+<h4>Listado de Cámaras Conectadas<a class="headerlink" href="#listado-de-camaras-conectadas" title="Link to this heading">¶</a></h4>
+<p>Puede que se estén preguntando, ¿y si no sabemos la ruta exacta de la
+cámara? Podemos pedirle al módulo que nos proporcione la lista de
+cámaras conectadas a la computadora y que inicialice la primera
+cámara en la lista.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">camlist</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">list_cameras</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">camlist</span><span class="p">:</span>
+    <span class="n">cam</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">Camera</span><span class="p">(</span><span class="n">camlist</span><span class="p">[</span><span class="mi">0</span><span class="p">],(</span><span class="mi">640</span><span class="p">,</span><span class="mi">480</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="uso-los-controles-de-la-camara">
+<h4>Uso los Controles de la Cámara<a class="headerlink" href="#uso-los-controles-de-la-camara" title="Link to this heading">¶</a></h4>
+<p>La mayoría de las cámaras admiten controles como voltear la imagen y cambiar
+el brillo. set_controls() y get_controls() pueden ser usados en cualquier
+momento después de usar start().</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cam</span><span class="o">.</span><span class="n">set_controls</span><span class="p">(</span><span class="n">hflip</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">vflip</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span> <span class="n">camera</span><span class="o">.</span><span class="n">get_controls</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="captura-de-una-transmision-en-vivo">
+<h3>Captura de una Transmisión en Vivo<a class="headerlink" href="#captura-de-una-transmision-en-vivo" title="Link to this heading">¶</a></h3>
+<p>El resto de este tutorial se basará en capturar un flujo en vivo de
+imagenes. Para ello usaremos la clase que se muestra a continuación.
+Como se describe, simplemente mostrará (blit) en la pantalla una
+corriente constante de cuadros a la pantalla, mostrando efecivamente
+un video en vivo. Básicamente es lo que se espera, hacer un bucle con
+get_image(), se aplica a la pantalla de Surface, y lo voltea. Por
+razones de rendimiento, suministraremos a la cámara la misma Surface
+para utilizar en cada ocasión.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Capture</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">640</span><span class="p">,</span><span class="mi">480</span><span class="p">)</span>
+        <span class="c1"># crear una visualización de surface. cosas estándar de pygame</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># esto es lo mismo que vimos antes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clist</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">list_cameras</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">clist</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Sorry, no se detectaron cámaras.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cam</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">Camera</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clist</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cam</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+        <span class="c1"># crear una surface para capturar, con fines de rendimiento</span>
+        <span class="c1"># profundidad de bit es la misma que la de la Surface de visualización.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">Surface</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_and_flip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># si no querés vincular la velocidad de cuadros a la cámara, podés verificar</span>
+        <span class="c1"># si la cámara tiene una imagen lista. Tené en cuenta que mientras esto funciona</span>
+        <span class="c1"># en la mayoría de las cámaras, algunas nunca van a devolver un &#39;true&#39;.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cam</span><span class="o">.</span><span class="n">query_image</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cam</span><span class="o">.</span><span class="n">get_image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span><span class="p">)</span>
+
+        <span class="c1"># pasalo (blit) a la Surface de visualización. ¡Simple!</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">going</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">while</span> <span class="n">going</span><span class="p">:</span>
+            <span class="n">events</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">QUIT</span> <span class="ow">or</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">KEYDOWN</span> <span class="ow">and</span> <span class="n">e</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">K_ESCAPE</span><span class="p">):</span>
+                    <span class="c1"># cerrar la cámara de forma segura</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">cam</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+                    <span class="n">going</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_and_flip</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Dado que get_image() es una llamada de bloqueo que podría tomar bastante tiempo
+en una cámara lenta, este ejemplo usa query_image() para ver si la cámara está
+lista. Esto permite separar la velocidad de fotogramas de tu juego de la
+de tu cámara. También es posible hacer que la cámara capture imágenes en un
+subproceso separado obteniendo aproximadamente la misma ganancia de rendimiento,
+si encontrás que tu cámara no es compatible con la función query_image().</p>
+</section>
+<section id="vision-basica-por-computadora">
+<h3>Visión Básica por Computadora<a class="headerlink" href="#vision-basica-por-computadora" title="Link to this heading">¶</a></h3>
+<p>Al usar los módulos de la cámara, transormación y máscara, pygame puede
+hacer algo de visión por computadora básica.</p>
+<section id="modelos-de-color">
+<h4>Modelos de Color<a class="headerlink" href="#modelos-de-color" title="Link to this heading">¶</a></h4>
+<p>When initializing a camera, colorspace is an optional parameter, with 'RGB',
+'YUV', and 'HSV' as the possible choices.  YUV and HSV are both generally more
+useful for computer vision than RGB, and allow you to more easily threshold by
+color, something we will look at later in the tutorial.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">cam</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">Camera</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clist</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="s2">&quot;RGB&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/camera_rgb.jpg" class="trailing" src="../_images/camera_rgb.jpg" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">cam</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">Camera</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clist</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="s2">&quot;YUV&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/camera_yuv.jpg" class="trailing" src="../_images/camera_yuv.jpg" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">cam</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">Camera</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clist</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="s2">&quot;HSV&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/camera_hsv.jpg" class="trailing" src="../_images/camera_hsv.jpg" />
+</section>
+<section id="thresholding-umbralizacion">
+<h4>Thresholding (Umbralización)<a class="headerlink" href="#thresholding-umbralizacion" title="Link to this heading">¶</a></h4>
+<p>Usando la función threshold() del módulo de transformación, uno puede hacer
+simple efectos del estilo de pantalla verde o asilar objetos de colores
+especificos en una escena. En el siguiente ejemplo, usamos umbralización
+para separar el árbol verde y hacemos que el resto de la imagen sea negra.
+Consultá la documentación de referencia para más detalles de la función:
+<code class="xref py py-func docutils literal notranslate"><span class="pre">threshold</span> <span class="pre">function</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">thresholded</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">Surface</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cam</span><span class="o">.</span><span class="n">get_image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span><span class="p">)</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thresholded</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="mi">90</span><span class="p">,</span><span class="mi">170</span><span class="p">,</span><span class="mi">170</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/camera_thresholded.jpg" class="trailing" src="../_images/camera_thresholded.jpg" />
+<p>Por supuesto, esto solo es útil si ya conocés el color exacto del objeto que estás
+buscando. Para evitar esto y hacer la umbralización utilizable en el mundo real,
+necesitamos agregar una etapa de calibración en la que identifiquemos el color de
+un objeto y usarlo para umbralizarlo. Nosotros usaremos la función average_color()
+del módulo de transformación para hacer esto. A continuación, se muestra un
+ejemplo de la función calibración que se podría repetir hasta que se produzca
+un evento como apretar una tecla y [obtener] una imagen de cómo se vería.
+El color adentro del cuadro será el que se use para la umbralización. Hay que
+tener en cuenta que estamos usando el modelo de color HSV en las imágenes
+a continuación.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calibrate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c1"># capturar la imagen</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cam</span><span class="o">.</span><span class="n">get_image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span><span class="p">)</span>
+    <span class="c1"># aplicarlo a la Surface de visualización</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+    <span class="c1"># crear un rectángulo (rect) en el medio de la pantalla</span>
+    <span class="n">crect</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">rect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="p">,</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">145</span><span class="p">,</span><span class="mi">105</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span><span class="p">),</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="c1"># obtener el color promedio del área dentro del rect</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">ccolor</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">average_color</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span><span class="p">,</span> <span class="n">crect</span><span class="p">)</span>
+    <span class="c1"># rellenar la esquina superior izquierda con ese color</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ccolor</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span><span class="p">))</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/camera_average.jpg" class="trailing" src="../_images/camera_average.jpg" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thresholded</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ccolor</span><span class="p">,(</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/camera_thresh.jpg" class="trailing" src="../_images/camera_thresh.jpg" />
+<p>Pueden usar la misma idea para hacer una simple pantalla verde/azul, al obtener
+primero una imagen del fondo y después umbralizar contrastando con ella. El
+ejemplo a continuación solo tiene la cámara apuntando a una pared blanca en
+modelo de color HSV.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calibrate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c1"># captura un montón de imagenes de fondo.</span>
+    <span class="n">bg</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">):</span>
+      <span class="n">bg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cam</span><span class="o">.</span><span class="n">get_image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">background</span><span class="p">))</span>
+    <span class="c1"># promedia el color de las imágenes para llegar a uno solo y deshacerse de posibles perturbaciones</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">average_surfaces</span><span class="p">(</span><span class="n">bg</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">background</span><span class="p">)</span>
+    <span class="c1"># aplicarlo a la Surface de visualización</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">background</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/camera_background.jpg" class="trailing" src="../_images/camera_background.jpg" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thresholded</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">background</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../_images/camera_green.jpg" class="trailing" src="../_images/camera_green.jpg" />
+</section>
+<section id="uso-del-modulo-de-mascara">
+<h4>Uso del Módulo de Máscara<a class="headerlink" href="#uso-del-modulo-de-mascara" title="Link to this heading">¶</a></h4>
+<p>Lo anterior es genial si solo querés mostrar imágenes, pero con el módulo
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">mask</span> <span class="pre">module</span></code>, también podés usar la cámara como
+dispositivo de entrada para un juego. Por ejemplo, volviendo al ejemplo
+de la umbralización de un objeto específico, podemos encontrar la posición
+de ese objeto y usarlo para controlar un objeto en la pantalla.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_and_flip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cam</span><span class="o">.</span><span class="n">get_image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span><span class="p">)</span>
+    <span class="c1"># umbralizar contra el color que obtuvimos antes</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">from_threshold</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ccolor</span><span class="p">,</span> <span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot</span><span class="p">,(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+    <span class="c1"># mantener solo el manchón más grande de ese color</span>
+    <span class="n">connected</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">connected_component</span><span class="p">()</span>
+    <span class="c1"># asegurarse que el manchón sea lo suficientemente grande, que no sea solo perturbaciones</span>
+    <span class="k">if</span> <span class="n">mask</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+        <span class="c1"># encontrar el centro del manchónfind the center of the blob</span>
+        <span class="n">coord</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">centroid</span><span class="p">()</span>
+        <span class="c1"># dibujar un círculo con un tamaño variable en el tamaño del manchón</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">draw</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">coord</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="n">mask</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">/</span><span class="mi">400</span><span class="p">),</span><span class="mi">5</span><span class="p">))</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/camera_mask.jpg" class="trailing" src="../_images/camera_mask.jpg" />
+<p>Este es solo el ejemplo más básico. Podés rastrear múltiples manchas de diferentes
+colores, encontrar los contornos de los objetos, tener detección de colisiones
+entre objetos de la vida real y del juego, obtener el ángulo de un objetos
+para permitir su control, y más. ¡A divertirse!</p>
+</section>
+</section>
+</section>
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/tutorials/CamaraIntro.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Índice General"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="right" >
+          <a href="ChimpanceLineaporLinea.html" title="Tutorial de Pygame - Ejemplo del Chimpancé, Línea Por Línea"
+             accesskey="N">siguiente</a> |</li>
+        <li class="right" >
+          <a href="../referencias/cursors.html" title="pygame.cursors"
+             accesskey="P">anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.6.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Tutoriales Pygame - Introducción al Módulo de Cámara</a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

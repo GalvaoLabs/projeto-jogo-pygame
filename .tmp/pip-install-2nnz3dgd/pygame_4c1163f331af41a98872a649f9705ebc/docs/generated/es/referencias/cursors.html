@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pygame.cursors &#8212; pygame v2.6.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=a854c6a8" />
+    <script src="../_static/documentation_options.js?v=b1d3d371"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/translations.js?v=d190bf04"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="Tutoriales Pygame - Introducción al Módulo de Cámara" href="../tutorials/CamaraIntro.html" />
+    <link rel="prev" title="pygame.Color" href="color.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png" alt="logo image"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><strong>Most useful stuff</strong>:
+	    <a href="color.html">Color</a>
+	  </p>
+
+	  <p class="bottom"><strong>Advanced stuff</strong>:
+	    <a href="cursors.html">cursors</a> | 
+	    <a href="bufferproxy.html">BufferProxy</a>
+	  </p>
+
+	  <p class="bottom"><strong>Other</strong>:
+	    <a href="camera.html">camera</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="module-pygame.cursors">
+<span id="pygame-cursors"></span><dl class="definition">
+<dt class="title module sig sig-object">
+<code class="docutils literal notranslate"><span class="pre">pygame.cursors</span></code></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">pygame module for cursor resources</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="cursors.html#pygame.cursors.compile">pygame.cursors.compile</a></div>
+</td>
+<td>—</td>
+<td>create binary cursor data from simple strings</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="cursors.html#pygame.cursors.load_xbm">pygame.cursors.load_xbm</a></div>
+</td>
+<td>—</td>
+<td>load cursor data from an XBM file</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="cursors.html#pygame.cursors.Cursor">pygame.cursors.Cursor</a></div>
+</td>
+<td>—</td>
+<td>pygame object representing a cursor</td>
+</tr>
+</tbody>
+</table>
+<p>Pygame ofrece control sobre el cursor del hardware del sistema.
+Pygame admite cursores en blanco y negro (cursores de mapa de bits), así como
+cursores variantes del sistema y cursores de color.
+Podés controlar el cursor utilizando funciones dentro del módulo <code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.mouse</span></code>.</p>
+<p>Este módulo de cursores contiene funciones para cargar y decodificar
+varios formatos de cursores. Estas te permiten almacenar fácilmente tus
+cursores en archivos externos o directamente como cadenas de caracteres codificadas
+en Python.</p>
+<p>El módulo incluye varios cursores estándar. La función <code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.mouse.set_cursor()</span></code>
+toma varios argumentos. Todos estos argumentos se han almacenado en una única
+tupla que puedes llamar de la siguiente manera:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">set_cursor</span><span class="p">(</span><span class="o">*</span><span class="n">pygame</span><span class="o">.</span><span class="n">cursors</span><span class="o">.</span><span class="n">arrow</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Las siguientes variables pueden ser pasadas a <code class="docutils literal notranslate"><span class="pre">pygame.mouse.set_cursor</span></code> function:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pygame.cursors.arrow</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pygame.cursors.diamond</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pygame.cursors.broken_x</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pygame.cursors.tri_left</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pygame.cursors.tri_right</span></code></p></li>
+</ul>
+</div></blockquote>
+<p>Este módulo también contiene algunos cursores como cadenas de caracters formateadas.
+Será necesario pasarlos a la función <code class="docutils literal notranslate"><span class="pre">pygame.cursors.compile()</span></code> antes de
+poder utilizarlos.
+El ejemplo de llamada se vería así:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cursor</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">cursors</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">cursors</span><span class="o">.</span><span class="n">textmarker_strings</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pygame</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">set_cursor</span><span class="p">((</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="o">*</span><span class="n">cursor</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Las siguientes cadenas de caracteres se pueden convertir en mapas de bits de cursor con
+<code class="docutils literal notranslate"><span class="pre">pygame.cursors.compile()</span></code> :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pygame.cursors.thickarrow_strings</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pygame.cursors.sizer_x_strings</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pygame.cursors.sizer_y_strings</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pygame.cursors.sizer_xy_strings</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pygame.cursor.textmarker_strings</span></code></p></li>
+</ul>
+</div></blockquote>
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.cursors.compile">
+<span class="sig-prename descclassname"><span class="pre">pygame.cursors.</span></span><span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cursors.compile" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">create binary cursor data from simple strings</span></div>
+<div class="line"><span class="signature">compile(strings, black='X', white='.', xor='o') -&gt; data, mask</span></div>
+</div>
+<p>Se puede utilizar una secuencia de cadenas para crear datos binarios de
+cursor para el cursor del sistema. Esto devuelve los datos binarios en
+forma de dos tuplas. Estas se pueden pasar como tercer y cuarto argumento,
+respectivamente, de la función <code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.mouse.set_cursor()</span></code>.</p>
+<p>Si estás creando tus propias cadenas de caracteres, podés usar cualquier valor
+para representar los píxeles blanco y negro. Algunos sistemas permiten
+establecer un color especial de alternancia para el color del sistema,
+también llamado color xor. Si el sistema no admite cursores xor, ese color
+será simplemente negro.</p>
+<p>La altura debe ser divisible por 8. el ancho de las cadenas debe ser igual
+y divisible por 8. Si estas dos condiciones no se cumplen, se generará un
+<code class="docutils literal notranslate"><span class="pre">ValueError</span></code>.
+Un ejemplo de conjunto de cadenas de caracteres de cursor se ve así:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">thickarrow_strings</span> <span class="o">=</span> <span class="p">(</span>               <span class="c1">#sized 24x24</span>
+  <span class="s2">&quot;XX                      &quot;</span><span class="p">,</span>
+  <span class="s2">&quot;XXX                     &quot;</span><span class="p">,</span>
+  <span class="s2">&quot;XXXX                    &quot;</span><span class="p">,</span>
+  <span class="s2">&quot;XX.XX                   &quot;</span><span class="p">,</span>
+  <span class="s2">&quot;XX..XX                  &quot;</span><span class="p">,</span>
+  <span class="s2">&quot;XX...XX                 &quot;</span><span class="p">,</span>
+  <span class="s2">&quot;XX....XX                &quot;</span><span class="p">,</span>
+  <span class="s2">&quot;XX.....XX               &quot;</span><span class="p">,</span>
+  <span class="s2">&quot;XX......XX              &quot;</span><span class="p">,</span>
+  <span class="s2">&quot;XX.......XX             &quot;</span><span class="p">,</span>
+  <span class="s2">&quot;XX........XX            &quot;</span><span class="p">,</span>
+  <span class="s2">&quot;XX........XXX           &quot;</span><span class="p">,</span>
+  <span class="s2">&quot;XX......XXXXX           &quot;</span><span class="p">,</span>
+  <span class="s2">&quot;XX.XXX..XX              &quot;</span><span class="p">,</span>
+  <span class="s2">&quot;XXXX XX..XX             &quot;</span><span class="p">,</span>
+  <span class="s2">&quot;XX   XX..XX             &quot;</span><span class="p">,</span>
+  <span class="s2">&quot;     XX..XX             &quot;</span><span class="p">,</span>
+  <span class="s2">&quot;      XX..XX            &quot;</span><span class="p">,</span>
+  <span class="s2">&quot;      XX..XX            &quot;</span><span class="p">,</span>
+  <span class="s2">&quot;       XXXX             &quot;</span><span class="p">,</span>
+  <span class="s2">&quot;       XX               &quot;</span><span class="p">,</span>
+  <span class="s2">&quot;                        &quot;</span><span class="p">,</span>
+  <span class="s2">&quot;                        &quot;</span><span class="p">,</span>
+  <span class="s2">&quot;                        &quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.cursors.load_xbm">
+<span class="sig-prename descclassname"><span class="pre">pygame.cursors.</span></span><span class="sig-name descname"><span class="pre">load_xbm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cursors.load_xbm" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">load cursor data from an XBM file</span></div>
+<div class="line"><span class="signature">load_xbm(cursorfile) -&gt; cursor_args</span></div>
+<div class="line"><span class="signature">load_xbm(cursorfile, maskfile) -&gt; cursor_args</span></div>
+</div>
+<p>Esto carga cursores para un subconjunto simple de archivos <code class="docutils literal notranslate"><span class="pre">XBM</span></code> . Los
+archivos <code class="docutils literal notranslate"><span class="pre">XBM</span></code> son tradicionalmente utilizados para almacenar cursores
+en sistemas UNIX, son un formato ASCII utilizado para representar
+imágenes simples.</p>
+<p>A veces, los valores de color blanco y negro se dividen en dos archivos
+<code class="docutils literal notranslate"><span class="pre">XBM</span></code>  separados. Podés pasar un segundo argumento de archivo de máscara
+(maskfile) para cargar las dos imágenes en un solo cursor.</p>
+<p>Los argumentos 'cursorfile' y 'maskfile' pueden ser nombres de archivos
+u objetos similares a archivos con el método 'readlines'</p>
+<p>El valor de retorno 'cursor_args' puede ser pasado directamente
+a la función <code class="docutils literal notranslate"><span class="pre">pygame.mouse.set_cursor()</span></code>.</p>
+</dd></dl>
+
+<dl class="py class definition">
+<dt class="sig sig-object py title" id="pygame.cursors.Cursor">
+<span class="sig-prename descclassname"><span class="pre">pygame.cursors.</span></span><span class="sig-name descname"><span class="pre">Cursor</span></span><a class="headerlink" href="#pygame.cursors.Cursor" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">pygame object representing a cursor</span></div>
+<div class="line"><span class="signature">Cursor(size, hotspot, xormasks, andmasks) -&gt; Cursor</span></div>
+<div class="line"><span class="signature">Cursor(hotspot, surface) -&gt; Cursor</span></div>
+<div class="line"><span class="signature">Cursor(constant) -&gt; Cursor</span></div>
+<div class="line"><span class="signature">Cursor(Cursor) -&gt; Cursor</span></div>
+<div class="line"><span class="signature">Cursor() -&gt; Cursor</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="cursors.html#pygame.cursors.Cursor.copy">pygame.cursors.Cursor.copy</a></div>
+</td>
+<td>—</td>
+<td>copy the current cursor</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="cursors.html#pygame.cursors.Cursor.type">pygame.cursors.Cursor.type</a></div>
+</td>
+<td>—</td>
+<td>Gets the cursor type</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="cursors.html#pygame.cursors.Cursor.data">pygame.cursors.Cursor.data</a></div>
+</td>
+<td>—</td>
+<td>Gets the cursor data</td>
+</tr>
+</tbody>
+</table>
+<p>En pygame 2, hay 3 tipos de cursores que podés crear para darle un poco
+de brillo adicional a tu juego. Existen cursores de tipo <strong>bitmap</strong>, que
+ya existían en Pygame 1.x, y se compilan a partir de una cadena de caracteres
+o se cargan desde un archivo xbm. Luego, están los cursores de tipo <strong>system</strong>,
+donde eliges un conjunto predefinido que transmitirá el mismo significado pero
+se verá nativo en diferentes sistemas operativos. Por último puedes crear un
+cursor de tipo <strong>color</strong>, que muestra una superficie de Pygame como el cursor.</p>
+<p><strong>Creando un cursor del sistema</strong></p>
+<p>Elegí una constante de esta lista, pasala a <code class="docutils literal notranslate"><span class="pre">pygame.cursors.Cursor(constant)</span></code>,
+¡y listo! Tené en cuenta que no todos los sistemas admiten todos los cursores
+del sistema y es posible que obtengas una sustitución en su lugar. Por ejemplo,
+en MacOS, WAIT/WAITARROW debería mostrarse como una flecha y
+SIZENWSE/SIZENESW/SIZEALL debería mostrarse como una mano cerrada. Y en Wayland,
+cada cursor SIZE debería aparecer como una mano.
+debería mostrarse como una mano cerrada.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Pygame</span> <span class="n">Cursor</span> <span class="n">Constant</span>           <span class="n">Description</span>
+<span class="o">--------------------------------------------</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">SYSTEM_CURSOR_ARROW</span>       <span class="n">arrow</span> <span class="p">(</span><span class="n">flecha</span><span class="p">)</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">SYSTEM_CURSOR_IBEAM</span>       <span class="n">i</span><span class="o">-</span><span class="n">beam</span> <span class="p">(</span><span class="n">viga</span> <span class="n">en</span> <span class="n">i</span><span class="p">,</span> <span class="n">o</span> <span class="n">viga</span> <span class="n">de</span> <span class="n">doble</span> <span class="n">t</span><span class="p">)</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">SYSTEM_CURSOR_WAIT</span>        <span class="n">wait</span> <span class="p">(</span><span class="n">espera</span><span class="p">)</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">SYSTEM_CURSOR_CROSSHAIR</span>   <span class="n">crosshair</span> <span class="p">(</span><span class="n">cruz</span> <span class="n">de</span> <span class="n">mira</span><span class="p">)</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">SYSTEM_CURSOR_WAITARROW</span>   <span class="n">small</span> <span class="n">wait</span> <span class="n">cursor</span> <span class="p">(</span><span class="n">pequeño</span> <span class="n">cursor</span> <span class="n">de</span> <span class="n">espera</span><span class="p">)</span>
+                                 <span class="p">(</span><span class="ow">or</span> <span class="n">wait</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">available</span><span class="p">)</span> <span class="p">(</span><span class="n">o</span> <span class="n">si</span> <span class="n">no</span> <span class="n">está</span> <span class="n">disponible</span><span class="p">,</span> <span class="n">espera</span><span class="p">)</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">SYSTEM_CURSOR_SIZENWSE</span>    <span class="n">double</span> <span class="n">arrow</span> <span class="n">pointing</span> <span class="p">(</span><span class="n">doble</span> <span class="n">flecha</span> <span class="n">apuntando</span> <span class="n">al</span> <span class="n">noroeste</span> <span class="n">y</span> <span class="n">sudeste</span><span class="p">)</span>
+                                 <span class="n">northwest</span> <span class="ow">and</span> <span class="n">southeast</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">SYSTEM_CURSOR_SIZENESW</span>    <span class="n">double</span> <span class="n">arrow</span> <span class="n">pointing</span> <span class="p">(</span><span class="n">doble</span> <span class="n">flecha</span> <span class="n">apuntando</span> <span class="n">al</span> <span class="n">noreste</span> <span class="n">y</span> <span class="n">sudoeste</span><span class="p">)</span>
+                                 <span class="n">northeast</span> <span class="ow">and</span> <span class="n">southwest</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">SYSTEM_CURSOR_SIZEWE</span>      <span class="n">double</span> <span class="n">arrow</span> <span class="n">pointing</span> <span class="p">(</span><span class="n">doble</span> <span class="n">flecha</span> <span class="n">apuntando</span> <span class="n">al</span> <span class="n">oeste</span> <span class="n">y</span> <span class="n">al</span> <span class="n">este</span><span class="p">)</span>
+                                 <span class="n">west</span> <span class="ow">and</span> <span class="n">east</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">SYSTEM_CURSOR_SIZENS</span>      <span class="n">double</span> <span class="n">arrow</span> <span class="n">pointing</span> <span class="p">(</span><span class="n">doble</span> <span class="n">flecha</span> <span class="n">apuntando</span> <span class="n">al</span> <span class="n">norte</span> <span class="n">y</span> <span class="n">sur</span><span class="p">)</span>
+                                 <span class="n">north</span> <span class="ow">and</span> <span class="n">south</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">SYSTEM_CURSOR_SIZEALL</span>     <span class="n">four</span> <span class="n">pointed</span> <span class="n">arrow</span> <span class="n">pointing</span> <span class="p">(</span><span class="n">flecha</span> <span class="n">de</span> <span class="n">cuatro</span> <span class="n">puntas</span> <span class="n">apuntando</span> <span class="n">al</span> <span class="n">norte</span><span class="p">,</span> <span class="n">sur</span><span class="p">,</span> <span class="n">este</span> <span class="n">y</span> <span class="n">oeste</span><span class="p">)</span>
+                                 <span class="n">north</span><span class="p">,</span> <span class="n">south</span><span class="p">,</span> <span class="n">east</span><span class="p">,</span> <span class="ow">and</span> <span class="n">west</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">SYSTEM_CURSOR_NO</span>          <span class="n">slashed</span> <span class="n">circle</span> <span class="ow">or</span> <span class="n">crossbones</span> <span class="p">(</span><span class="n">círculo</span> <span class="n">tachado</span> <span class="n">o</span> <span class="n">calaveras</span> <span class="n">cruzadas</span><span class="p">)</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">SYSTEM_CURSOR_HAND</span>        <span class="n">hand</span> <span class="p">(</span><span class="n">mano</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Creando un cursor sin pasar argumentos</strong></p>
+<p>Además de las constantes del cursor disponibles y descritas anteriormente,
+también podés llamar a <code class="docutils literal notranslate"><span class="pre">pygame.cursors.Cursor()</span></code>, y tu cursor está listo
+(hacer esto es lo mismo que llamar a <code class="docutils literal notranslate"><span class="pre">pygame.cursors.Cursor(pygame.SYSTEM_CURSOR_ARROW)</span></code>)
+Haciendo una de estas llamadas lo que en realidad se crea es un cursor del sistema
+utilizando la imagen nativa predeterminada.</p>
+<p><strong>Creando un curosr de color</strong></p>
+<p>Para crear un cursor de color, hay que crear un objeto <code class="docutils literal notranslate"><span class="pre">Cursor</span></code> a partir de un
+<code class="docutils literal notranslate"><span class="pre">hotspot</span></code> y una <code class="docutils literal notranslate"><span class="pre">surface</span></code>. Un <code class="docutils literal notranslate"><span class="pre">hotspot</span></code> es una coordenada (x,y) que determina
+donde en el cursor está el punto exacto. La posición debe estar dentro de los límites
+de la <code class="docutils literal notranslate"><span class="pre">surface</span></code>.</p>
+<p><strong>Creando un cursor de mapa de bits (bitmap)</strong></p>
+<p>Cuando el cursor del mouse está visible, se mostrará como un mapa de bits
+en blanco y negro utilizando los arrays de máscaras (bitmask) dadas. El
+<code class="docutils literal notranslate"><span class="pre">size</span></code> (tamaño) es una secuencia que contiene el ancho y alto del cursor.
+El <a href="#id1"><span class="problematic" id="id2">``</span></a>hotspot``es una secuencia que contiene la posición del hotspot del
+cursor.</p>
+<p>Un cursor tiene un ancho y alto, pero la posición del mouse está
+representada mediante un conjunto de coordenadas de punto. Por lo tanto,
+el valor pasado al <code class="docutils literal notranslate"><span class="pre">hotspot</span></code> del cursor ayuda a pygame a determinar
+exactamente en qué punto se encuentra el cursor.</p>
+<p><code class="docutils literal notranslate"><span class="pre">xormasks``es</span> <span class="pre">una</span> <span class="pre">secuencia</span> <span class="pre">de</span> <span class="pre">bytes</span> <span class="pre">que</span> <span class="pre">contiene</span> <span class="pre">las</span> <span class="pre">máscaras</span> <span class="pre">de</span>
+<span class="pre">datos</span> <span class="pre">del</span> <span class="pre">cursor.</span> <span class="pre">Por</span> <span class="pre">último,</span> <span class="pre">``andmasks</span></code> es una secuencia de bytes
+que contiene los datos de máscara de bits del cursor. Para crear estas
+variable podemos utilizar la función <a class="tooltip reference internal" href="#pygame.cursors.compile" title=""><code class="xref py py-func docutils literal notranslate"><span class="pre">pygame.cursors.compile()</span></code><span class="tooltip-content">create binary cursor data from simple strings</span></a>.</p>
+<p>Ancho y alto deben ser múltiplos de 8, y las arrays de máscara (mask arrays)
+deben tener el tamaño correcto para el ancho y el alto dados. De lo contrario,
+se generará una excepción.</p>
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.cursors.Cursor.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cursors.Cursor.copy" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">copy the current cursor</span></div>
+<div class="line"><span class="signature">copy() -&gt; Cursor</span></div>
+</div>
+<p>Devuelve un nuevo objeto Cursor con los mismos datos y hotspots que el original.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.cursors.Cursor.type">
+<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#pygame.cursors.Cursor.type" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Gets the cursor type</span></div>
+<div class="line"><span class="signature">type -&gt; string</span></div>
+</div>
+<p>El tipo será <code class="docutils literal notranslate"><span class="pre">&quot;system&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;bitmap&quot;</span></code>, o <code class="docutils literal notranslate"><span class="pre">&quot;color&quot;</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute definition">
+<dt class="sig sig-object py title" id="pygame.cursors.Cursor.data">
+<span class="sig-name descname"><span class="pre">data</span></span><a class="headerlink" href="#pygame.cursors.Cursor.data" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">Gets the cursor data</span></div>
+<div class="line"><span class="signature">data -&gt; tuple</span></div>
+</div>
+<p>Devuelve los datos que se utilizaron para crear este objeto de cursor, envuelto en una tupla.</p>
+</dd></dl>
+
+<div class="versionadded">
+<p><span class="versionmodified added">New in pygame 2.0.1.</span></p>
+</div>
+</dd></dl>
+
+<p>Código de ejemplo para crear y establecer cursores. (Click en el mouse para cambiar el cursor)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># pygame setup</span>
+<span class="kn">import</span> <span class="nn">pygame</span> <span class="k">as</span> <span class="nn">pg</span>
+
+<span class="n">pg</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="n">screen</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">([</span><span class="mi">600</span><span class="p">,</span> <span class="mi">400</span><span class="p">])</span>
+<span class="n">pg</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_caption</span><span class="p">(</span><span class="s2">&quot;Example code for the cursors module&quot;</span><span class="p">)</span>
+
+<span class="c1"># create a system cursor</span>
+<span class="n">system</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">cursors</span><span class="o">.</span><span class="n">Cursor</span><span class="p">(</span><span class="n">pg</span><span class="o">.</span><span class="n">SYSTEM_CURSOR_NO</span><span class="p">)</span>
+
+<span class="c1"># create bitmap cursors</span>
+<span class="n">bitmap_1</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">cursors</span><span class="o">.</span><span class="n">Cursor</span><span class="p">(</span><span class="o">*</span><span class="n">pg</span><span class="o">.</span><span class="n">cursors</span><span class="o">.</span><span class="n">arrow</span><span class="p">)</span>
+<span class="n">bitmap_2</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">cursors</span><span class="o">.</span><span class="n">Cursor</span><span class="p">(</span>
+    <span class="p">(</span><span class="mi">24</span><span class="p">,</span> <span class="mi">24</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="o">*</span><span class="n">pg</span><span class="o">.</span><span class="n">cursors</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pg</span><span class="o">.</span><span class="n">cursors</span><span class="o">.</span><span class="n">thickarrow_strings</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># create a color cursor</span>
+<span class="n">surf</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">Surface</span><span class="p">((</span><span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">))</span> <span class="c1"># you could also load an image</span>
+<span class="n">surf</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">120</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>        <span class="c1"># and use that as your surface</span>
+<span class="n">color</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">cursors</span><span class="o">.</span><span class="n">Cursor</span><span class="p">((</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="n">surf</span><span class="p">)</span>
+
+<span class="n">cursors</span> <span class="o">=</span> <span class="p">[</span><span class="n">system</span><span class="p">,</span> <span class="n">bitmap_1</span><span class="p">,</span> <span class="n">bitmap_2</span><span class="p">,</span> <span class="n">color</span><span class="p">]</span>
+<span class="n">cursor_index</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">pg</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">set_cursor</span><span class="p">(</span><span class="n">cursors</span><span class="p">[</span><span class="n">cursor_index</span><span class="p">])</span>
+
+<span class="n">clock</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Clock</span><span class="p">()</span>
+<span class="n">going</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">while</span> <span class="n">going</span><span class="p">:</span>
+    <span class="n">clock</span><span class="o">.</span><span class="n">tick</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+    <span class="n">screen</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
+    <span class="n">pg</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">pg</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pg</span><span class="o">.</span><span class="n">QUIT</span> <span class="ow">or</span> <span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pg</span><span class="o">.</span><span class="n">KEYDOWN</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">pg</span><span class="o">.</span><span class="n">K_ESCAPE</span><span class="p">):</span>
+            <span class="n">going</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># if the mouse is clicked it will switch to a new cursor</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pg</span><span class="o">.</span><span class="n">MOUSEBUTTONDOWN</span><span class="p">:</span>
+            <span class="n">cursor_index</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">cursor_index</span> <span class="o">%=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cursors</span><span class="p">)</span>
+            <span class="n">pg</span><span class="o">.</span><span class="n">mouse</span><span class="o">.</span><span class="n">set_cursor</span><span class="p">(</span><span class="n">cursors</span><span class="p">[</span><span class="n">cursor_index</span><span class="p">])</span>
+
+<span class="n">pg</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/referencias/cursors.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Índice General"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="right" >
+          <a href="../tutorials/CamaraIntro.html" title="Tutoriales Pygame - Introducción al Módulo de Cámara"
+             accesskey="N">siguiente</a> |</li>
+        <li class="right" >
+          <a href="color.html" title="pygame.Color"
+             accesskey="P">anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.6.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.cursors</span></code></a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

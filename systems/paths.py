@@ -1,8 +1,11 @@
-"""Where bundled resources and per-user data live.
+"""Where bundled resources and per-user data live, and which platform we are running on.
 
 * Development / source checkout: resources sit next to the code.
-* PyInstaller bundle: resources are unpacked under ``sys._MEIPASS``.
-* Web (Pygbag / Emscripten): resources are packaged next to ``main.py``.
+* PyInstaller bundle (Windows / macOS / Linux): resources are unpacked under ``sys._MEIPASS``.
+* Android (python-for-android / buildozer): resources are next to the code, user data goes to
+  the app's private folder (``ANDROID_PRIVATE``).
+* Web (Pygbag / Emscripten): resources are packaged next to ``main.py``; user data goes to the
+  browser's ``localStorage`` (see ``systems.storage``) with a virtual-filesystem fallback.
 """
 import os
 import sys
@@ -13,6 +16,27 @@ CONFIG_ENV_VAR = "STARTUP_TYCOON_CONFIG_DIR"   # lets tests and portable install
 
 def is_web() -> bool:
     return sys.platform == "emscripten"
+
+
+def is_android() -> bool:
+    return "ANDROID_ARGUMENT" in os.environ or "ANDROID_PRIVATE" in os.environ
+
+
+def is_mobile() -> bool:
+    """Touch-first platforms (the phone browser is detected later by the page itself)."""
+    return is_android()
+
+
+def platform_name() -> str:
+    if is_web():
+        return "web"
+    if is_android():
+        return "android"
+    if sys.platform.startswith("win"):
+        return "windows"
+    if sys.platform == "darwin":
+        return "macos"
+    return "linux"
 
 
 def base_dir() -> str:
@@ -28,12 +52,14 @@ def resource_path(*parts: str) -> str:
 
 
 def user_config_dir() -> str:
-    """Per-user, writable folder for settings.json (not created here)."""
+    """Per-user, writable folder for settings and saves (not created here)."""
     override = os.environ.get(CONFIG_ENV_VAR)
     if override:
         return override
     if is_web():
-        return "/data/data/startup_tycoon"      # Pygbag persistent mount (IndexedDB-backed)
+        return "/data/data/startup_tycoon"      # Pygbag virtual filesystem (fallback only)
+    if is_android():
+        return os.environ.get("ANDROID_PRIVATE") or os.path.join(os.path.expanduser("~"), ".startup_tycoon")
     home = os.path.expanduser("~")
     if sys.platform.startswith("win"):
         return os.path.join(os.environ.get("APPDATA") or os.path.join(home, "AppData", "Roaming"), APP_DIR_NAME)

@@ -1,0 +1,106 @@
+# Builds Startup Tycoon for every platform. Push a tag like v1.1.0 to also create a GitHub Release
+# (and, if the BUTLER_API_KEY secret is set, publish everything to itch.io).
+name: build
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  ITCH_TARGET: "SEU_USUARIO/startup-tycoon"      # <- itch.io "user/game-slug"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r requirements.txt pillow
+      - run: python -m unittest discover -s tests -v          # real pygame, SDL dummy drivers
+      - run: python tools/simulate.py
+
+  web:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: python tools/build_web.py
+      - uses: actions/upload-artifact@v4
+        with: { name: web-itch, path: dist/startup-tycoon-itch.zip }
+
+  desktop:
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: windows-latest, name: windows }
+          - { os: ubuntu-22.04,   name: linux }         # old glibc => runs on most distros
+          - { os: macos-latest,   name: macos-arm64 }   # Apple Silicon
+          - { os: macos-15-intel, name: macos-x64 }     # Intel Macs
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.name == 'macos-x64' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r requirements-dev.txt
+      - run: python tools/build_desktop.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: desktop-${{ matrix.name }}
+          path: dist/StartupTycoon-*
+
+  android:
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "17" }
+      - name: Build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git zip unzip autoconf libtool pkg-config zlib1g-dev libncurses-dev \
+            libffi-dev libssl-dev cmake build-essential ccache
+          pip install buildozer "cython<3"
+      - name: Build debug APK
+        run: buildozer -v android debug
+      - uses: actions/upload-artifact@v4
+        with: { name: android-apk, path: "bin/*.apk" }
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [web, desktop, android]
+    runs-on: ubuntu-latest
+    permissions: { contents: write }
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { path: artifacts }
+      - run: find artifacts -type f
+      - uses: softprops/action-gh-release@v2
+        with: { files: "artifacts/**/*", generate_release_notes: true }
+      - name: Publish to itch.io (only if BUTLER_API_KEY is configured)
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+        run: |
+          if [ -z "$BUTLER_API_KEY" ]; then echo "BUTLER_API_KEY not set: skipping itch.io"; exit 0; fi
+          curl -sSL -o butler.zip https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default
+          unzip -q butler.zip && chmod +x butler
+          V="${GITHUB_REF_NAME#v}"
+          ./butler push artifacts/web-itch/startup-tycoon-itch.zip "$ITCH_TARGET:html5"   --userversion "$V"
+          ./butler push artifacts/desktop-windows/*.zip           "$ITCH_TARGET:windows"  --userversion "$V"
+          ./butler push artifacts/desktop-linux/*.tar.gz          "$ITCH_TARGET:linux"    --userversion "$V"
+          ./butler push artifacts/desktop-macos-arm64/*.zip       "$ITCH_TARGET:osx-arm64" --userversion "$V"
+          ls artifacts/desktop-macos-x64/*.zip >/dev/null 2>&1 && \
+            ./butler push artifacts/desktop-macos-x64/*.zip       "$ITCH_TARGET:osx-x64"  --userversion "$V" || true
+          ./butler push artifacts/android-apk/*.apk               "$ITCH_TARGET:android"  --userversion "$V"

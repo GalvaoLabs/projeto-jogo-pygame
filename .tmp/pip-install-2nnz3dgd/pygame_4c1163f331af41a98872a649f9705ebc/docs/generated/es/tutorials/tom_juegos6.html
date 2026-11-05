@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Juntando Todo &#8212; pygame v2.6.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=a854c6a8" />
+    <script src="../_static/documentation_options.js?v=b1d3d371"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/translations.js?v=d190bf04"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="Página de Logotipos de Pygame" href="../logos.html" />
+    <link rel="prev" title="Objetos controlables por los usuarios" href="tom_juegos5.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png" alt="logo image"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><strong>Most useful stuff</strong>:
+	    <a href="../referencias/color.html">Color</a>
+	  </p>
+
+	  <p class="bottom"><strong>Advanced stuff</strong>:
+	    <a href="../referencias/cursors.html">cursors</a> | 
+	    <a href="../referencias/bufferproxy.html">BufferProxy</a>
+	  </p>
+
+	  <p class="bottom"><strong>Other</strong>:
+	    <a href="../referencias/camera.html">camera</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="juntando-todo">
+<section id="hacerjuegos-6">
+<span id="id1"></span><h2>1. Juntando todo<a class="headerlink" href="#hacerjuegos-6" title="Link to this heading">¶</a></h2>
+<p>Hasta ahora has aprendido todo lo básico necesario para construir un juego simple. Estás en condiciones de entender cómo crear
+objetos de Pygame, cómo Pygame muestra objetos, cómo maneja eventos y cómo pódes usar física para introducir algo de
+movimiento en tu juego. Ahora simplemente te mostraré cómo podés tomar todas esas partes de código y juntarlas en un
+juego funcional. Lo que necesitamos primero es permitir que la pelota golpee los lados de la pantalla, y que la paleta pueda
+golpear la pelota, de lo contrario no habrá mucho juego involucrado. Hacemos esto utilizando los métodos de colisión de
+Pygame: <code class="xref py py-meth docutils literal notranslate"><span class="pre">collision</span></code>.</p>
+<section id="deja-que-la-pelota-golpee-los-lados">
+<span id="hacerjuegos-6-1"></span><h3>6.1. Dejá que la pelota golpee los lados<a class="headerlink" href="#deja-que-la-pelota-golpee-los-lados" title="Link to this heading">¶</a></h3>
+<p>El principio básico para hacer que rebote en los lados es fácil de comprender. Se obtienen las coordenadas de las cuatro esquinas
+de la pelota y se comprueba si corresponden con la coordenada x o y del borde de la pantalla. Por lo tanto, si la esquina superior
+derecha e izquierda tienen una coordenada 'y' de cero, sabés que la pelota está actualmente en el borde superior de la
+pantalla. Se hace todo esto en la función <code class="docutils literal notranslate"><span class="pre">update</span></code>, despue´s de haber calculado la nueva posición de la pelota.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">newpos</span><span class="p">):</span>
+      <span class="n">tl</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">(</span><span class="n">newpos</span><span class="o">.</span><span class="n">topleft</span><span class="p">)</span>
+      <span class="n">tr</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">(</span><span class="n">newpos</span><span class="o">.</span><span class="n">topright</span><span class="p">)</span>
+      <span class="n">bl</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">(</span><span class="n">newpos</span><span class="o">.</span><span class="n">bottomleft</span><span class="p">)</span>
+      <span class="n">br</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">(</span><span class="n">newpos</span><span class="o">.</span><span class="n">bottomright</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">tr</span> <span class="ow">and</span> <span class="n">tl</span> <span class="ow">or</span> <span class="p">(</span><span class="n">br</span> <span class="ow">and</span> <span class="n">bl</span><span class="p">):</span>
+              <span class="n">angle</span> <span class="o">=</span> <span class="o">-</span><span class="n">angle</span>
+      <span class="k">if</span> <span class="n">tl</span> <span class="ow">and</span> <span class="n">bl</span><span class="p">:</span>
+              <span class="bp">self</span><span class="o">.</span><span class="n">offcourt</span><span class="p">(</span><span class="n">player</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">tr</span> <span class="ow">and</span> <span class="n">br</span><span class="p">:</span>
+              <span class="bp">self</span><span class="o">.</span><span class="n">offcourt</span><span class="p">(</span><span class="n">player</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="bp">self</span><span class="o">.</span><span class="n">vector</span> <span class="o">=</span> <span class="p">(</span><span class="n">angle</span><span class="p">,</span><span class="n">z</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Aquí comprobamos si el <code class="docutils literal notranslate"><span class="pre">area</span></code> contiene la nueva posición de la bola (lo que siempre debería ser así, por lo que no
+necesitamos una cláusula <code class="docutils literal notranslate"><span class="pre">else</span></code>, aunque en otras circunstancias podríamos considerarla). Luego verificamos si las
+coordenadas de las cuatro esquinas están <em>colisionando</em> con los bordes del área, y creamos objetos para cada resultado.
+Si lo están, los objetos tendrán un valor de 1 o <code class="docutils literal notranslate"><span class="pre">True</span></code>. Si no, el valor será <code class="docutils literal notranslate"><span class="pre">None</span></code> o <code class="docutils literal notranslate"><span class="pre">False</span></code>. Luego verificamos
+si ha chocado con la parte superior o inferior, y si lo ha hecho, cambiamos la dirección de la pelota. Afortunadamente,
+usando radianes podemos hacer esto simplemente invirtiendo su valor positivo/negativo. También comprobamos si la bola
+se ha salido de los lados, y si lo ha hecho, llamamos a la función <code class="docutils literal notranslate"><span class="pre">offcourt</span></code>. En mi juego, esto reinicia la bola,
+agrega 1 punto al puntaje del jugador especificado al llamar la función y muestra el nuevo puntaje.</p>
+<p>Finalmente, recompilamos el vector en función del nuevo ángulo. Y eso es todo. La pelota ahora rebotará felizmente en
+las paredes y saldrá de la cancha con gracia.</p>
+</section>
+<section id="let-the-ball-hit-bats">
+<span id="hacerjuegos-6-2"></span><h3>6.2. Let the ball hit bats<a class="headerlink" href="#let-the-ball-hit-bats" title="Link to this heading">¶</a></h3>
+<p>Hacer que la pelota golpee los bates es muy similar a hacer que golpee los lados de la pantalla. Todavía usamos el método de colisión.
+Todavía usamos el método de colisión, pero esta vez comprobamos si los rectángulos de la pelota y cualquiera de los bates colisionan.
+En este código también he agregado código adicional para evitar errores. Descubrirás que tendrás que poner todo tipo de código adicional
+para evitar errores y problemas, así que es bueno acostumbrarse a verlo.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">else</span><span class="p">:</span>
+    <span class="c1"># Desinflar los rectángulos para que no quede la pelota detrás del bate</span>
+    <span class="n">player1</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">inflate</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">player2</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">inflate</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="c1"># ¿Colisionan la pelota y el bate?</span>
+    <span class="c1"># Nota: He establecido una regla extraña que establece self.hit en 1 cuando colisionan, y lo desactiva en la siguiente</span>
+    <span class="c1"># iteración. Esto es para evitar un comportamiento extraño de la pelota donde encuentra una colisión *dentro* del</span>
+    <span class="c1"># bate, la pelota se invierte, y aún está dentro del bate, por lo que rebota dentro de él.</span>
+    <span class="c1"># De esta manera, la pelota siempre puede escapar y rebotar limpiamente.</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">colliderect</span><span class="p">(</span><span class="n">player1</span><span class="o">.</span><span class="n">rect</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hit</span><span class="p">:</span>
+        <span class="n">angle</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">-</span> <span class="n">angle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hit</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hit</span>
+    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">colliderect</span><span class="p">(</span><span class="n">player2</span><span class="o">.</span><span class="n">rect</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hit</span><span class="p">:</span>
+        <span class="n">angle</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">-</span> <span class="n">angle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hit</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hit</span>
+    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">hit</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hit</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hit</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">vector</span> <span class="o">=</span> <span class="p">(</span><span class="n">angle</span><span class="p">,</span><span class="n">z</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Comenzamos esta sección con una declaración <code class="docutils literal notranslate"><span class="pre">else</span></code>, porque esto continúa desde el fragmento de código anterior, para comprobar
+si la pelota golpea los lados. Tiene sentido que si no golpea los lados, podría golpear el bate, por lo que continuamos con la
+declaración condicional. El primer error a corregir es reducir el tamaño de los rectángulos de los jugadores en 3 píxeles en ambas
+dimensiones, para evitar que el bate atrape una pelota que pasa detrás de ellos (si imaginás que simplemente mueve el bate para que
+la pelota viaje detrás de él, los rectángulos se superponen, y normalmente la pelota habría sido &quot;golepada&quot; - esto lo evita)</p>
+<p>A continuación, comprobamos si los rectángulos colisionan, con una corrección adicional de errores. Observá que he comentado sobre
+estas partes extrañas del código: siempre es bueno explicar las partes del código que son anormales, tanto para otros que miran tu
+código, como para que lo entiendas cuando regreses a él. Sin la corrección, la pelota podría golpear una esquina del bate, cambiar
+la dirección, y un cuadro después, aún encontrarse dentro del bate. Luego, volvería a pensar que ha sido golpeada, y cambiaría su
+dirección. Esto puede suceder varias veces, haciendo que el movimiento de la pelota sea completamente irreal. Por lo tanto, tenemos
+una variable, <code class="docutils literal notranslate"><span class="pre">self.hit</span></code>, que la establecemos en <code class="docutils literal notranslate"><span class="pre">True</span></code>  cuando ha sido golpeada y <code class="docutils literal notranslate"><span class="pre">False</span></code> un cuadro después. Cuando
+comprobamos si los rectángulos han colisionado, también verificamos si <code class="docutils literal notranslate"><span class="pre">self.hit</span></code> es <code class="docutils literal notranslate"><span class="pre">True</span></code>/<code class="docutils literal notranslate"><span class="pre">False</span></code>, para evitar rebotes
+internos.</p>
+<p>El código importante aquí es bastante fácil de entender. Todos los rectángulos tienen una función
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">colliderect</span></code>, en la que alimentas el rectángulo de otro objeto y devuelve <code class="docutils literal notranslate"><span class="pre">True</span></code> si los
+rectángulos se superpone, y <code class="docutils literal notranslate"><span class="pre">False</span></code> si no lo hacen. Si se superponen, podemos cambiar la dirección restando el ángulo actual
+de <code class="docutils literal notranslate"><span class="pre">pi</span></code> (de nuevo, un truco útil que podés hacer con radianes, que ajustará el ángulo en 90 grados y lo enviará en la dirección
+correcta; podrías encontrar en este punto que es necesario una comprensión detallada de radianes.) Solo para terminar la comprobación
+de errores, cambiamos <code class="docutils literal notranslate"><span class="pre">self.hit</span></code> de vuelta a <code class="docutils literal notranslate"><span class="pre">False</span></code> si es el cuadro por le cual fueron golpeados.</p>
+<p>También volvemos a compilar el vector. Por supuesto, querrás eliminar la misma línea en el fragmento de código anterior, para que
+solo lo hagas una vez después de la declaración condicional <code class="docutils literal notranslate"><span class="pre">if-else</span></code>. ¡Y eso es todo! El código combinado ahora permitirá que la
+pelota golpee los lados y los bates.</p>
+</section>
+<section id="el-producto-final">
+<span id="hacerjuegos-6-3"></span><h3>6.3. El producto final<a class="headerlink" href="#el-producto-final" title="Link to this heading">¶</a></h3>
+<p>El producto final, con todos los fragmentos de código unidos, así como algunos otros fragmentos de código pegados juntos,
+se verá así:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#</span>
+<span class="c1"># Tom&#39;s Pong</span>
+<span class="c1"># A simple pong game with realistic physics and AI</span>
+<span class="c1"># http://www.tomchance.uklinux.net/projects/pong.shtml</span>
+<span class="c1">#</span>
+<span class="c1"># Released under the GNU General Public License</span>
+
+<span class="n">VERSION</span> <span class="o">=</span> <span class="s2">&quot;0.4&quot;</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="kn">import</span> <span class="nn">random</span>
+    <span class="kn">import</span> <span class="nn">math</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+    <span class="kn">import</span> <span class="nn">getopt</span>
+    <span class="kn">import</span> <span class="nn">pygame</span>
+    <span class="kn">from</span> <span class="nn">socket</span> <span class="kn">import</span> <span class="o">*</span>
+    <span class="kn">from</span> <span class="nn">pygame.locals</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">,</span> <span class="n">err</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;couldn&#39;t load module. </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">load_png</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Load image and return image object&quot;&quot;&quot;</span>
+    <span class="n">fullname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fullname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">image</span><span class="o">.</span><span class="n">get_alpha</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">convert</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">convert_alpha</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot load image: </span><span class="si">{</span><span class="n">fullname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">SystemExit</span>
+    <span class="k">return</span> <span class="n">image</span><span class="p">,</span> <span class="n">image</span><span class="o">.</span><span class="n">get_rect</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">Ball</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">sprite</span><span class="o">.</span><span class="n">Sprite</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A ball that will move across the screen</span>
+<span class="sd">    Returns: ball object</span>
+<span class="sd">    Functions: update, calcnewpos</span>
+<span class="sd">    Attributes: area, vector&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">xy</span><span class="p">),</span> <span class="n">vector</span><span class="p">):</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">sprite</span><span class="o">.</span><span class="n">Sprite</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="n">load_png</span><span class="p">(</span><span class="s2">&quot;ball.png&quot;</span><span class="p">)</span>
+        <span class="n">screen</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">get_surface</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">=</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_rect</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vector</span> <span class="o">=</span> <span class="n">vector</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hit</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">newpos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calcnewpos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">vector</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="n">newpos</span>
+        <span class="p">(</span><span class="n">angle</span><span class="p">,</span><span class="n">z</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">newpos</span><span class="p">):</span>
+            <span class="n">tl</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">(</span><span class="n">newpos</span><span class="o">.</span><span class="n">topleft</span><span class="p">)</span>
+            <span class="n">tr</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">(</span><span class="n">newpos</span><span class="o">.</span><span class="n">topright</span><span class="p">)</span>
+            <span class="n">bl</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">(</span><span class="n">newpos</span><span class="o">.</span><span class="n">bottomleft</span><span class="p">)</span>
+            <span class="n">br</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">collidepoint</span><span class="p">(</span><span class="n">newpos</span><span class="o">.</span><span class="n">bottomright</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">tr</span> <span class="ow">and</span> <span class="n">tl</span> <span class="ow">or</span> <span class="p">(</span><span class="n">br</span> <span class="ow">and</span> <span class="n">bl</span><span class="p">):</span>
+                <span class="n">angle</span> <span class="o">=</span> <span class="o">-</span><span class="n">angle</span>
+            <span class="k">if</span> <span class="n">tl</span> <span class="ow">and</span> <span class="n">bl</span><span class="p">:</span>
+                <span class="c1">#self.offcourt()</span>
+                <span class="n">angle</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">-</span> <span class="n">angle</span>
+            <span class="k">if</span> <span class="n">tr</span> <span class="ow">and</span> <span class="n">br</span><span class="p">:</span>
+                <span class="n">angle</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">-</span> <span class="n">angle</span>
+                <span class="c1">#self.offcourt()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Desinflar los rectángulos para que no quede la pelota detrás del bate</span>
+            <span class="n">player1</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">inflate</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+            <span class="n">player2</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">inflate</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+
+            <span class="c1"># ¿Colisionan la pelota y el bate?</span>
+            <span class="c1"># Nota: He establecido una regla extraña que establece self.hit en 1 cuando colisionan, y lo desactiva en la siguiente</span>
+            <span class="c1"># iteración. Esto es para evitar un comportamiento extraño de la pelota donde encuentra una colisión *dentro* del</span>
+            <span class="c1"># bate, la pelota se invierte, y aún está dentro del bate, por lo que rebota dentro de él.</span>
+            <span class="c1"># De esta manera, la pelota siempre puede escapar y rebotar limpiamente.</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">colliderect</span><span class="p">(</span><span class="n">player1</span><span class="o">.</span><span class="n">rect</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hit</span><span class="p">:</span>
+                <span class="n">angle</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">-</span> <span class="n">angle</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hit</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hit</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">colliderect</span><span class="p">(</span><span class="n">player2</span><span class="o">.</span><span class="n">rect</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hit</span><span class="p">:</span>
+                <span class="n">angle</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">-</span> <span class="n">angle</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hit</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hit</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">hit</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hit</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vector</span> <span class="o">=</span> <span class="p">(</span><span class="n">angle</span><span class="p">,</span><span class="n">z</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">calcnewpos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">rect</span><span class="p">,</span><span class="n">vector</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">angle</span><span class="p">,</span><span class="n">z</span><span class="p">)</span> <span class="o">=</span> <span class="n">vector</span>
+        <span class="p">(</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">z</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span><span class="n">z</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">rect</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Bat</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">sprite</span><span class="o">.</span><span class="n">Sprite</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Movable tennis &#39;bat&#39; with which one hits the ball</span>
+<span class="sd">    Returns: bat object</span>
+<span class="sd">    Functions: reinit, update, moveup, movedown</span>
+<span class="sd">    Attributes: which, speed&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">side</span><span class="p">):</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">sprite</span><span class="o">.</span><span class="n">Sprite</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="n">load_png</span><span class="p">(</span><span class="s2">&quot;bat.png&quot;</span><span class="p">)</span>
+        <span class="n">screen</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">get_surface</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">=</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_rect</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">side</span> <span class="o">=</span> <span class="n">side</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;still&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reinit</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">reinit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;still&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">movepos</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">side</span> <span class="o">==</span> <span class="s2">&quot;left&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">midleft</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">midleft</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">side</span> <span class="o">==</span> <span class="s2">&quot;right&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">midright</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">midright</span>
+
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">newpos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">movepos</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">newpos</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="n">newpos</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">pump</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">moveup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">movepos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">movepos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;moveup&quot;</span>
+
+    <span class="k">def</span> <span class="nf">movedown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">movepos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">movepos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;movedown&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># Initializar pantalla</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+    <span class="n">screen</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">((</span><span class="mi">640</span><span class="p">,</span> <span class="mi">480</span><span class="p">))</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_caption</span><span class="p">(</span><span class="s2">&quot;Basic Pong&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Llenar fondo</span>
+    <span class="n">background</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span><span class="p">(</span><span class="n">screen</span><span class="o">.</span><span class="n">get_size</span><span class="p">())</span>
+    <span class="n">background</span> <span class="o">=</span> <span class="n">background</span><span class="o">.</span><span class="n">convert</span><span class="p">()</span>
+    <span class="n">background</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+    <span class="c1"># Initializar jugadores</span>
+    <span class="k">global</span> <span class="n">player1</span>
+    <span class="k">global</span> <span class="n">player2</span>
+    <span class="n">player1</span> <span class="o">=</span> <span class="n">Bat</span><span class="p">(</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+    <span class="n">player2</span> <span class="o">=</span> <span class="n">Bat</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Initializar pelota</span>
+    <span class="n">speed</span> <span class="o">=</span> <span class="mi">13</span>
+    <span class="n">rand</span> <span class="o">=</span> <span class="p">((</span><span class="mf">0.1</span> <span class="o">*</span> <span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">))))</span>
+    <span class="n">ball</span> <span class="o">=</span> <span class="n">Ball</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="mf">0.47</span><span class="p">,</span><span class="n">speed</span><span class="p">))</span>
+
+    <span class="c1"># Initializar sprites</span>
+    <span class="n">playersprites</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">sprite</span><span class="o">.</span><span class="n">RenderPlain</span><span class="p">((</span><span class="n">player1</span><span class="p">,</span> <span class="n">player2</span><span class="p">))</span>
+    <span class="n">ballsprite</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">sprite</span><span class="o">.</span><span class="n">RenderPlain</span><span class="p">(</span><span class="n">ball</span><span class="p">)</span>
+
+    <span class="c1"># Blittear todo en la pantalla</span>
+    <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">background</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+
+    <span class="c1"># Initializar reloj</span>
+    <span class="n">clock</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Clock</span><span class="p">()</span>
+
+    <span class="c1"># Bucle de eventos</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="c1"># Make sure game doesn&#39;t run at more than 60 frames per second</span>
+        <span class="n">clock</span><span class="o">.</span><span class="n">tick</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">QUIT</span><span class="p">:</span>
+                <span class="k">return</span>
+            <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">KEYDOWN</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">K_a</span><span class="p">:</span>
+                    <span class="n">player1</span><span class="o">.</span><span class="n">moveup</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">K_z</span><span class="p">:</span>
+                    <span class="n">player1</span><span class="o">.</span><span class="n">movedown</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">K_UP</span><span class="p">:</span>
+                    <span class="n">player2</span><span class="o">.</span><span class="n">moveup</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">K_DOWN</span><span class="p">:</span>
+                    <span class="n">player2</span><span class="o">.</span><span class="n">movedown</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">KEYUP</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">K_a</span> <span class="ow">or</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">K_z</span><span class="p">:</span>
+                    <span class="n">player1</span><span class="o">.</span><span class="n">movepos</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">player1</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;still&quot;</span>
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">K_UP</span> <span class="ow">or</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">K_DOWN</span><span class="p">:</span>
+                    <span class="n">player2</span><span class="o">.</span><span class="n">movepos</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">player2</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;still&quot;</span>
+
+        <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">background</span><span class="p">,</span> <span class="n">ball</span><span class="o">.</span><span class="n">rect</span><span class="p">,</span> <span class="n">ball</span><span class="o">.</span><span class="n">rect</span><span class="p">)</span>
+        <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">background</span><span class="p">,</span> <span class="n">player1</span><span class="o">.</span><span class="n">rect</span><span class="p">,</span> <span class="n">player1</span><span class="o">.</span><span class="n">rect</span><span class="p">)</span>
+        <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">background</span><span class="p">,</span> <span class="n">player2</span><span class="o">.</span><span class="n">rect</span><span class="p">,</span> <span class="n">player2</span><span class="o">.</span><span class="n">rect</span><span class="p">)</span>
+        <span class="n">ballsprite</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+        <span class="n">playersprites</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+        <span class="n">ballsprite</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">screen</span><span class="p">)</span>
+        <span class="n">playersprites</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">screen</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">flip</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Además de mostrar el producto final, señalaré de vuelta a TomPong, en el cual se basa todo esto. Descargalo, échale un vistazo al
+código fuente y verás una implementación de pong utilizando todo el código que has visto en este tutorial, así como también
+un montón de otros códigos que he agregado en varias versiones, como física adicional para girar y varias otras correcciones
+de errores y fallas.</p>
+<p>Ah, TomPong se encuentra en <a class="reference external" href="http://www.tomchance.uklinux.net/projects/pong.shtml">http://www.tomchance.uklinux.net/projects/pong.shtml</a>.</p>
+</section>
+</section>
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/tutorials/tom_juegos6.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Índice General"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="right" >
+          <a href="../logos.html" title="Página de Logotipos de Pygame"
+             accesskey="N">siguiente</a> |</li>
+        <li class="right" >
+          <a href="tom_juegos5.html" title="Objetos controlables por los usuarios"
+             accesskey="P">anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.6.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Juntando Todo</a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

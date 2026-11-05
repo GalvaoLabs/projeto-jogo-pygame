@@ -60,7 +60,7 @@
     "menu.settings": "Configurações",
     "menu.quit": "Sair",
     "menu.goal": "Meta: alcançar {goal:compact} de patrimônio líquido. Não vá à falência.",
-    "menu.hint": "TAB alterna Dashboard / Escritório   |   ESC abre este menu",
+    "menu.hint": "TAB alterna Dashboard / Escritório   |   1-5 abas   |   E encerra o mês   |   M som   |   F11 tela cheia   |   ESC menu",
     "nav.dashboard": "Dashboard",
     "nav.office": "Escritório",
     "nav.menu": "Menu",
@@ -297,6 +297,9 @@
     "board.goal": "Meta da empresa",
     "board.progress": "{a:money} de {b:money}",
     "board.complete": "{p:pct1} concluído",
-    "settings.language_label": "Language / Idioma"
+    "settings.language_label": "Language / Idioma",
+    "settings.options": "Opções",
+    "settings.sound": "Som",
+    "settings.volume": "Volume"
   }
 }

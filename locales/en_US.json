@@ -60,7 +60,7 @@
     "menu.settings": "Settings",
     "menu.quit": "Quit",
     "menu.goal": "Goal: reach {goal:compact} in net worth. Do not go bankrupt.",
-    "menu.hint": "TAB switches Dashboard / Office   |   ESC opens this menu",
+    "menu.hint": "TAB switches Dashboard / Office   |   1-5 tabs   |   E ends the month   |   M sound   |   F11 fullscreen   |   ESC menu",
     "nav.dashboard": "Dashboard",
     "nav.office": "Office",
     "nav.menu": "Menu",
@@ -297,6 +297,9 @@
     "board.goal": "Company goal",
     "board.progress": "{a:money} of {b:money}",
     "board.complete": "{p:pct1} complete",
-    "settings.language_label": "Language / Idioma"
+    "settings.language_label": "Language / Idioma",
+    "settings.options": "Options",
+    "settings.sound": "Sound",
+    "settings.volume": "Volume"
   }
 }

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Clases de objetos de juego &#8212; pygame v2.6.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=a854c6a8" />
+    <script src="../_static/documentation_options.js?v=b1d3d371"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/translations.js?v=d190bf04"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="Objetos controlables por los usuarios" href="tom_juegos5.html" />
+    <link rel="prev" title="Dando Inicio" href="tom_juegos3.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png" alt="logo image"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><strong>Most useful stuff</strong>:
+	    <a href="../referencias/color.html">Color</a>
+	  </p>
+
+	  <p class="bottom"><strong>Advanced stuff</strong>:
+	    <a href="../referencias/cursors.html">cursors</a> | 
+	    <a href="../referencias/bufferproxy.html">BufferProxy</a>
+	  </p>
+
+	  <p class="bottom"><strong>Other</strong>:
+	    <a href="../referencias/camera.html">camera</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="clases-de-objetos-de-juego">
+<section id="hacerjuegos-4">
+<span id="id1"></span><h2>4. Clases de objetos de juego<a class="headerlink" href="#hacerjuegos-4" title="Link to this heading">¶</a></h2>
+<p>Una vez que hayas cargado tus módulos y escrito tus funciones de manejo de recursos, querrás pasar a escribir algunos
+objetos de juego. La forma en que esto se realiza es bastante simple, sin embargo puede parecer complejo al principio.
+Escribirás una clase para cada tipo de objeto en el juego y después crearás una instancia de esas clases para los objetos.
+Luego podés usar los métodos de esas clases para manipular los objetos, dándoles algún tipo de movimiento y capacidades
+interactivas. Entonces tu juego, en pseudo-código, se verá así:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/python</span>
+
+<span class="c1"># [load modules here]</span>
+
+<span class="c1"># [resource handling functions here]</span>
+
+<span class="k">class</span> <span class="nc">Ball</span><span class="p">:</span>
+    <span class="c1"># [ball functions (methods) here]</span>
+    <span class="c1"># [e.g. a function to calculate new position]</span>
+    <span class="c1"># [and a function to check if it hits the side]</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">:</span>
+    <span class="c1"># [initiate game environment here]</span>
+
+    <span class="c1"># [create new object as instance of ball class]</span>
+    <span class="n">ball</span> <span class="o">=</span> <span class="n">Ball</span><span class="p">()</span>
+
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="c1"># [check for user input]</span>
+
+        <span class="c1"># [call ball&#39;s update function]</span>
+        <span class="n">ball</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Por supuesto, esto es un ejemplo muy simple, y tendrías que agregar todo el código en lugar de esos pequeños comentarios entre
+corchetes. Pero deberías entender la idea básica. Creás una clase, en la cual colocás todas las funciones de la pelota, incluyendo
+<code class="docutils literal notranslate"><span class="pre">__init__</span></code>,que crearía todos los atributos de la pelota, y <code class="docutils literal notranslate"><span class="pre">update</span></code>, que movería la pelota a su nueva posición antes de
+blittearla en la pantalla en esta posición.</p>
+<p>Luego podés crear más clases para todos tus otros objetos de juego, y luego crear instancias de los mismos para que puedas manejarlos
+fácilmente en la función <code class="docutils literal notranslate"><span class="pre">main</span></code> y en el bucle principal del programa. En contraste con iniciar la pelota en la función <code class="docutils literal notranslate"><span class="pre">main</span></code>,
+y luego tener muchas funciones sin clase para manipular un objeto de pelota establecido, y espero que puedas ver por qué usar clases
+es una ventaja: te permite poner todo el código perteneciente a cada objeto en un único lugar; hace que sea más fácil usar objetos;
+hace que agregar nuevos objetos y manipularlos sea más flexible. En lugar de agregar más código para cada nuevo objeto de pelota,
+podés simplemente crear instancias de la clase <code class="docutils literal notranslate"><span class="pre">Ball</span></code> para cada nuevo objeto de pelota. ¡Mágia!</p>
+<section id="una-clase-simple-de-pelota">
+<span id="hacerjuegos-4-1"></span><h3>4.1. Una clase simple de pelota<a class="headerlink" href="#una-clase-simple-de-pelota" title="Link to this heading">¶</a></h3>
+<p>Aquí hay una clase simple con el código necesario para crear un objeto pelota que se moverá a través de la pantalla, si la
+función <code class="docutils literal notranslate"><span class="pre">update</span></code> esa llamada en el bucleo principal:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Ball</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">sprite</span><span class="o">.</span><span class="n">Sprite</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A ball that will move across the screen  (Una peleota se moverá a través de la pantalla)</span>
+<span class="sd">    Returns: ball object</span>
+<span class="sd">    Functions: update, calcnewpos</span>
+<span class="sd">    Attributes: area, vector&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">sprite</span><span class="o">.</span><span class="n">Sprite</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="n">load_png</span><span class="p">(</span><span class="s1">&#39;ball.png&#39;</span><span class="p">)</span>
+        <span class="n">screen</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">get_surface</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">=</span> <span class="n">screen</span><span class="o">.</span><span class="n">get_rect</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vector</span> <span class="o">=</span> <span class="n">vector</span>
+
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">newpos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calcnewpos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">vector</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="n">newpos</span>
+
+    <span class="k">def</span> <span class="nf">calcnewpos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">rect</span><span class="p">,</span><span class="n">vector</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">angle</span><span class="p">,</span><span class="n">z</span><span class="p">)</span> <span class="o">=</span> <span class="n">vector</span>
+        <span class="p">(</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">z</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span><span class="n">z</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">rect</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Aquí tenemos la clase  <code class="docutils literal notranslate"><span class="pre">Ball</span></code> con una función <code class="docutils literal notranslate"><span class="pre">__init__</span></code> que configura la pelota, una función <code class="docutils literal notranslate"><span class="pre">update</span></code> que cambia el
+rectángulo de la pelota para que esté en la nueva posición, y una función <code class="docutils literal notranslate"><span class="pre">calcnewpos</span></code> para calcular la nueva posición de
+la pelota basada en su posición actual, y el vector por el cual se está moviendo. Explicaré la física en un momento.
+Lo único más a destacar es la cadena de documentación, que es un poco más larga esta vez, y explica los conceptos básicos
+del la clase. Estas cadenas son útiles no solo para ti mismo y otros programadores que revisen el código, sino también para
+las herramientas que analicen y documenten tu código. No harán mucha diferencia en programas pequeños, pero en los grandes
+son invaluables, así que es una buena costumbre de adquirir.</p>
+<section id="digresion-1-sprites">
+<span id="hacerjuegos-4-1-1"></span><h4>4.1.1. Digresión 1: Sprites<a class="headerlink" href="#digresion-1-sprites" title="Link to this heading">¶</a></h4>
+<p>La otra razón por la cual crear una clase por cada objeto son los sprites. Cada imagen que se renderiza en tu juego será un objeto,
+por lo que en principio, la clase de cada objeto debería heredar la clase <code class="xref py py-class docutils literal notranslate"><span class="pre">Sprite</span></code>. Esta es una
+característica muy útil de Python: la herencia de clases.
+Ahora, la clase <code class="docutils literal notranslate"><span class="pre">Ball</span></code> tiene todas las funciones que vienen con la clase <code class="docutils literal notranslate"><span class="pre">Sprite</span></code>, y cualquier instancia del objeto de la clase
+<code class="docutils literal notranslate"><span class="pre">Ball</span></code> será registrada por Pygame como un sprite. Mientras que con el texto y el fondo, que no se mueven, está bien hacer un blit
+del objeto sobre el fondo, Pygame maneja los objetos sprites de manera diferente, lo cual verás cuando miremos el código completo del
+programa.</p>
+<p>Básicamente, creas tanto un objeto pelota y un objeto sprite para la pelota, y luego llamás a la función update de la pelota en el
+objeto de sprite, actualizando así el sprite. Los sprites también te dan formas sofisticadas de determinar si dos objetos han
+colisionado. Normalmente, podrías simplemente comprobar en el bucle principal para ver si sus rectángulos se superponen, pero eso
+implicaría mucho código, lo cual sería una pérdida de tiempo porque la clase <code class="docutils literal notranslate"><span class="pre">Sprite</span></code> proporciona dos funciones (<code class="docutils literal notranslate"><span class="pre">spritecollide</span></code>
+y <code class="docutils literal notranslate"><span class="pre">groupcollide</span></code>) para hacer esto por vos.</p>
+</section>
+<section id="digresion-2-fisica-de-vectores">
+<span id="hacerjuegos-4-1-2"></span><h4>4.1.2. Digresión 2: Física de vectores<a class="headerlink" href="#digresion-2-fisica-de-vectores" title="Link to this heading">¶</a></h4>
+<p>Aparte de la estructura de la clase <code class="docutils literal notranslate"><span class="pre">Ball</span></code>, lo notable de este código es la física de vectores utilizada para calcular el
+movimiento de la pelota. En cualquier juego que involucre movimiento angular, no se llegará muy lejos a menos que se esté
+cómodo con la trigonometría, así que simplemente introduciré los conceptos básicos que necesitás saber para entender la
+función <code class="docutils literal notranslate"><span class="pre">calcnewpos</span></code>.</p>
+<p>Para empezar, notarás que la pelota tiene un atributo llamado <code class="docutils literal notranslate"><span class="pre">vector</span></code>, que está compuesto por <code class="docutils literal notranslate"><span class="pre">angle</span></code> y <code class="docutils literal notranslate"><span class="pre">z</span></code>. El
+ángulo estpa medido en radianes y dará la dirección en la que la pelota se mueve. Z es la velocidad a la que se mueve la
+pelota. Entonces, usando este vector, podemos determinar la dirección y velocidad de la pelota, y por lo tanto, cuánto se
+moverá en los ejes x e y:</p>
+<img alt="../_images/tom_radians.png" src="../_images/tom_radians.png" />
+<p>El diagrama anterior ilustra las matemáticas básicas detrás de los vectores. En el diagrama de la izquierda, se puede ver el
+movimiento proyectado de la pelota representado por una línea azul. La longitud de esa línea (z) representa su velocidad, y el
+ángulo es la dirección en la que se moverá. El ángulo para el movimiento de la pelota siempre se tomará desde el eje x a la
+derecha, y se mide en sentido horario desde esa línea, como se muestra en el diagrama.</p>
+<p>A partir del ángulo y la velocidad de la pelota, podemos lograr calcular cuánto se ha movido a lo largo de los ejes x e y.
+Necesitamos hacer esto porque Pygame en sí no admite vectores, y solo podemos mover la pelota moviendo su rectángulo a lo largo
+de los dos ejes. Por lo tanto, necesitamos <em class="firstterm">resolve</em> (resolver) el ángulo y la velocidad en su movimiento en el eje
+x (dx) y en el eje y (dy). Esto es un asunto sencillo de trigonometría y se puede hacer con las fórmulas que se muestran en el
+diagrama.</p>
+<p>Si has estudiado trigonometría elemental antes, nada de esto debería ser nuevo para vos. Pero en caso que seas olvidadizo, acá
+hay algunas fórmulas útiles para recordar, que te ayudarán a visualizar los ángulos (a mi me resulta más fácil visualizar los
+ángulos en grados que en radianes.</p>
+<img alt="../_images/tom_formulae.png" src="../_images/tom_formulae.png" />
+</section>
+</section>
+</section>
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/tutorials/tom_juegos4.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Índice General"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="right" >
+          <a href="tom_juegos5.html" title="Objetos controlables por los usuarios"
+             accesskey="N">siguiente</a> |</li>
+        <li class="right" >
+          <a href="tom_juegos3.html" title="Dando Inicio"
+             accesskey="P">anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.6.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Clases de objetos de juego</a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+
+<html lang="es" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pygame.cdrom &#8212; pygame v2.6.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygame.css?v=a854c6a8" />
+    <script src="../_static/documentation_options.js?v=b1d3d371"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/translations.js?v=d190bf04"></script>
+    <link rel="icon" href="../_static/pygame.ico"/>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="pygame.Color" href="color.html" />
+    <link rel="prev" title="pygame.camera" href="camera.html" /> 
+  </head><body>  
+
+    <div class="document">
+
+  <div class="header">
+	<div class="flex-container">
+	<div class="logo">
+	  <a href="https://www.pygame.org/">
+	    <img src="../_static/pygame_tiny.png" alt="logo image"/>
+	  </a>
+	  <h5>pygame documentation</h5>
+	</div>
+	<div class="pagelinks">
+	  <div class="top">
+	    <a href="https://www.pygame.org/">Pygame Home</a> ||
+	    <a href="../index.html">Help Contents</a> ||
+	    <a href="../genindex.html">Reference Index</a>
+
+        <form action="../search.html" method="get" style="display:inline;float:right;">
+          <input name="q" value="" type="text">
+          <input value="search" type="submit">
+        </form>
+	  </div>
+	  <hr style="color:black;border-bottom:none;border-style: dotted;border-bottom-style:none;">
+	  <p class="bottom"><strong>Most useful stuff</strong>:
+	    <a href="color.html">Color</a>
+	  </p>
+
+	  <p class="bottom"><strong>Advanced stuff</strong>:
+	    <a href="cursors.html">cursors</a> | 
+	    <a href="bufferproxy.html">BufferProxy</a>
+	  </p>
+
+	  <p class="bottom"><strong>Other</strong>:
+	    <a href="camera.html">camera</a>
+	  </p>
+</div>
+</div>
+  </div>
+
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+<section id="module-pygame.cdrom">
+<span id="pygame-cdrom"></span><dl class="definition">
+<dt class="title module sig sig-object">
+<code class="docutils literal notranslate"><span class="pre">pygame.cdrom</span></code></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">pygame module for audio cdrom control</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="cdrom.html#pygame.cdrom.init">pygame.cdrom.init</a></div>
+</td>
+<td>—</td>
+<td>initialize the cdrom module</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="cdrom.html#pygame.cdrom.quit">pygame.cdrom.quit</a></div>
+</td>
+<td>—</td>
+<td>uninitialize the cdrom module</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="cdrom.html#pygame.cdrom.get_init">pygame.cdrom.get_init</a></div>
+</td>
+<td>—</td>
+<td>true if the cdrom module is initialized</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="cdrom.html#pygame.cdrom.get_count">pygame.cdrom.get_count</a></div>
+</td>
+<td>—</td>
+<td>number of cd drives on the system</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="cdrom.html#pygame.cdrom.CD">pygame.cdrom.CD</a></div>
+</td>
+<td>—</td>
+<td>class to manage a cdrom drive</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Advertencia</p>
+<p>Este módulo no es funcional en pygame 2.0 y versiones superiores, a menos que hayas compilado manualmente pygame con SDL1.
+Este módulo no estará soportado en el futuro.
+Una alternativa para la funcionalidad de cdrom de Python es <a class="reference external" href="https://pypi.org/project/pycdio/">pycdio</a>.</p>
+</div>
+<p>El módulo cdrom administra las unidades de <code class="docutils literal notranslate"><span class="pre">CD</span></code> y <code class="docutils literal notranslate"><span class="pre">DVD</span></code> en la computadora.
+También puede controlar la reproducción de CD de audio. Este módulo debe
+inicializarse antes de poder hacer algo. Cada objeto <a href="#id1"><span class="problematic" id="id2">``</span></a>CD``que crees
+representa una unidad de cdrom y también debe inicializarse individualmente
+antes de poder realizar la mayoría de las acciones.</p>
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.cdrom.init">
+<span class="sig-prename descclassname"><span class="pre">pygame.cdrom.</span></span><span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cdrom.init" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">initialize the cdrom module</span></div>
+<div class="line"><span class="signature">init() -&gt; None</span></div>
+</div>
+<p>Inicializa el módulo de cdrom. Esto escaneará el sistema en busca de
+todos los dispositivos <code class="docutils literal notranslate"><span class="pre">CD</span></code>. El módulo debe inicializarse antes de
+que funcionen cualquier otra función. Esto ocurre automáticamente
+cuando llamas <code class="docutils literal notranslate"><span class="pre">pygame.init()</span></code>.</p>
+<p>Es seguro llamar a este función más de una vez.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.cdrom.quit">
+<span class="sig-prename descclassname"><span class="pre">pygame.cdrom.</span></span><span class="sig-name descname"><span class="pre">quit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cdrom.quit" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">uninitialize the cdrom module</span></div>
+<div class="line"><span class="signature">quit() -&gt; None</span></div>
+</div>
+<p>Decinicializa el módulo cdrom. Después de llamar a esta función, cualquier
+objeto <code class="docutils literal notranslate"><span class="pre">CD</span></code> existente dejará de funcionar.</p>
+<p>Es seguro llamar a esta función más de una vez.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.cdrom.get_init">
+<span class="sig-prename descclassname"><span class="pre">pygame.cdrom.</span></span><span class="sig-name descname"><span class="pre">get_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cdrom.get_init" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">true if the cdrom module is initialized</span></div>
+<div class="line"><span class="signature">get_init() -&gt; bool</span></div>
+</div>
+<p>Comprueba si el módulo cdrom está inicializado o no. Esto es diferente de
+<code class="docutils literal notranslate"><span class="pre">CD.init()</span></code> ya que cada unidad también debe inicializarse individualmente.</p>
+</dd></dl>
+
+<dl class="py function definition">
+<dt class="sig sig-object py title" id="pygame.cdrom.get_count">
+<span class="sig-prename descclassname"><span class="pre">pygame.cdrom.</span></span><span class="sig-name descname"><span class="pre">get_count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cdrom.get_count" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">number of cd drives on the system</span></div>
+<div class="line"><span class="signature">get_count() -&gt; count</span></div>
+</div>
+<p>Devuelve el número de unidades de CD en el sistema. Cuando creas objetos
+<code class="docutils literal notranslate"><span class="pre">CD</span></code>, debes pasar un ID entero que debe ser menor que este recuento. El
+recuento será 0 si no hay unidades en el sistema.</p>
+</dd></dl>
+
+<dl class="py class definition">
+<dt class="sig sig-object py title" id="pygame.cdrom.CD">
+<span class="sig-prename descclassname"><span class="pre">pygame.cdrom.</span></span><span class="sig-name descname"><span class="pre">CD</span></span><a class="headerlink" href="#pygame.cdrom.CD" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">class to manage a cdrom drive</span></div>
+<div class="line"><span class="signature">CD(id) -&gt; CD</span></div>
+</div>
+<table class="toc docutils align-default">
+<tbody>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="cdrom.html#pygame.cdrom.CD.init">pygame.cdrom.CD.init</a></div>
+</td>
+<td>—</td>
+<td>initialize a cdrom drive for use</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="cdrom.html#pygame.cdrom.CD.quit">pygame.cdrom.CD.quit</a></div>
+</td>
+<td>—</td>
+<td>uninitialize a cdrom drive for use</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="cdrom.html#pygame.cdrom.CD.get_init">pygame.cdrom.CD.get_init</a></div>
+</td>
+<td>—</td>
+<td>true if this cd device initialized</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="cdrom.html#pygame.cdrom.CD.play">pygame.cdrom.CD.play</a></div>
+</td>
+<td>—</td>
+<td>start playing audio</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="cdrom.html#pygame.cdrom.CD.stop">pygame.cdrom.CD.stop</a></div>
+</td>
+<td>—</td>
+<td>stop audio playback</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="cdrom.html#pygame.cdrom.CD.pause">pygame.cdrom.CD.pause</a></div>
+</td>
+<td>—</td>
+<td>temporarily stop audio playback</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="cdrom.html#pygame.cdrom.CD.resume">pygame.cdrom.CD.resume</a></div>
+</td>
+<td>—</td>
+<td>unpause audio playback</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="cdrom.html#pygame.cdrom.CD.eject">pygame.cdrom.CD.eject</a></div>
+</td>
+<td>—</td>
+<td>eject or open the cdrom drive</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="cdrom.html#pygame.cdrom.CD.get_id">pygame.cdrom.CD.get_id</a></div>
+</td>
+<td>—</td>
+<td>the index of the cdrom drive</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="cdrom.html#pygame.cdrom.CD.get_name">pygame.cdrom.CD.get_name</a></div>
+</td>
+<td>—</td>
+<td>the system name of the cdrom drive</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="cdrom.html#pygame.cdrom.CD.get_busy">pygame.cdrom.CD.get_busy</a></div>
+</td>
+<td>—</td>
+<td>true if the drive is playing audio</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="cdrom.html#pygame.cdrom.CD.get_paused">pygame.cdrom.CD.get_paused</a></div>
+</td>
+<td>—</td>
+<td>true if the drive is paused</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="cdrom.html#pygame.cdrom.CD.get_current">pygame.cdrom.CD.get_current</a></div>
+</td>
+<td>—</td>
+<td>the current audio playback position</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="cdrom.html#pygame.cdrom.CD.get_empty">pygame.cdrom.CD.get_empty</a></div>
+</td>
+<td>—</td>
+<td>False if a cdrom is in the drive</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="cdrom.html#pygame.cdrom.CD.get_numtracks">pygame.cdrom.CD.get_numtracks</a></div>
+</td>
+<td>—</td>
+<td>the number of tracks on the cdrom</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="cdrom.html#pygame.cdrom.CD.get_track_audio">pygame.cdrom.CD.get_track_audio</a></div>
+</td>
+<td>—</td>
+<td>true if the cdrom track has audio data</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="cdrom.html#pygame.cdrom.CD.get_all">pygame.cdrom.CD.get_all</a></div>
+</td>
+<td>—</td>
+<td>get all track information</td>
+</tr>
+<tr class="row-even"><td><div class="line"><a class="toc reference external" href="cdrom.html#pygame.cdrom.CD.get_track_start">pygame.cdrom.CD.get_track_start</a></div>
+</td>
+<td>—</td>
+<td>start time of a cdrom track</td>
+</tr>
+<tr class="row-odd"><td><div class="line"><a class="toc reference external" href="cdrom.html#pygame.cdrom.CD.get_track_length">pygame.cdrom.CD.get_track_length</a></div>
+</td>
+<td>—</td>
+<td>length of a cdrom track</td>
+</tr>
+</tbody>
+</table>
+<p>Podés crear un objeto <code class="docutils literal notranslate"><span class="pre">CD</span></code> para cada unidad de CD en el sistema.
+Usa <code class="docutils literal notranslate"><span class="pre">pygame.cdrom.get_count()</span></code> para determinar cuántas unidades
+existen realmente. El argumento 'id' es un número entero que
+representa la unidad, comenzando en cero.</p>
+<p>El objeto <code class="docutils literal notranslate"><span class="pre">CD</span></code> no está inicializado, solo podés llamar <code class="docutils literal notranslate"><span class="pre">CD.get_id()`</span> <span class="pre">y</span>
+<span class="pre">``CD.get_name()</span></code> en una unidad no inicializada.</p>
+<p>Es seguro crear múltiples objetos <a href="#id3"><span class="problematic" id="id4">``</span></a>CD``para la misma unidad, todos
+cooperarán normalmente.</p>
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.cdrom.CD.init">
+<span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cdrom.CD.init" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">initialize a cdrom drive for use</span></div>
+<div class="line"><span class="signature">init() -&gt; None</span></div>
+</div>
+<p>Inicializa la unidad de CD para ser utilizada. El debe estar inicializada
+para que la mayoría de los métodos <code class="docutils literal notranslate"><span class="pre">CD</span></code> funcionen. Incluso si el resto
+de pygame está inicializado.</p>
+<p>Puede haber una breve pausa mientras la unidad se inicializa. Evitá
+utilizar <code class="docutils literal notranslate"><span class="pre">CD.init()</span></code> si el programa no debe detenerse durante uno
+o dos segundos.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.cdrom.CD.quit">
+<span class="sig-name descname"><span class="pre">quit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cdrom.CD.quit" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">uninitialize a cdrom drive for use</span></div>
+<div class="line"><span class="signature">quit() -&gt; None</span></div>
+</div>
+<p>Desinicializa una unidad para su uso. Hacé un llamado a esto cuando tu
+programa no vaya a acceder a la unidad durante un tiempo.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.cdrom.CD.get_init">
+<span class="sig-name descname"><span class="pre">get_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cdrom.CD.get_init" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">true if this cd device initialized</span></div>
+<div class="line"><span class="signature">get_init() -&gt; bool</span></div>
+</div>
+<p>Comprueba si este dispositivo <code class="docutils literal notranslate"><span class="pre">CDROM</span></code> está inicializado. Esto es
+diferente de <code class="docutils literal notranslate"><span class="pre">pygame.cdrom.init()</span></code> ya que cada unidad también
+debe inicializarse individualmente.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.cdrom.CD.play">
+<span class="sig-name descname"><span class="pre">play</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cdrom.CD.play" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">start playing audio</span></div>
+<div class="line"><span class="signature">play(track, start=None, end=None) -&gt; None</span></div>
+</div>
+<p>Reproduce audio desde un CD de audio en la unidad. Además del argumento
+del número de pista, también podés introducir un tiempo de inicio y fin
+para la reproducción. El tiempo de inicio y fin está en segundos y  puede
+limintar la selección de una pista de audio reproducida.</p>
+<p>Si introducir un tiempo de inicio pero no de fin, el audio se reproducirá
+hasta el final de la pista. Si introducis un tiempo de inicio y 'None'
+para el tiempo final, el audio se reproducirá hasta el final de todo el
+disco.</p>
+<p>Véase <code class="docutils literal notranslate"><span class="pre">CD.get_numtracks()</span></code> y <code class="docutils literal notranslate"><span class="pre">CD.get_track_audio()</span></code> para encontrar
+las pistas que se van a reproducir.</p>
+<p>Nota: la pista 0 es la primera pista en el <code class="docutils literal notranslate"><span class="pre">CD</span></code>. Los números de pistas
+comienzan en 0.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.cdrom.CD.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cdrom.CD.stop" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">stop audio playback</span></div>
+<div class="line"><span class="signature">stop() -&gt; None</span></div>
+</div>
+<p>Detiene la reproducción del audio desde el CD-ROM. También se perderá la
+posición actual de reproducción. Este método no hace nada si la unidad
+no está reproduciendo audio.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.cdrom.CD.pause">
+<span class="sig-name descname"><span class="pre">pause</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cdrom.CD.pause" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">temporarily stop audio playback</span></div>
+<div class="line"><span class="signature">pause() -&gt; None</span></div>
+</div>
+<p>Detiene temporalmente la reproducción del audio en el <code class="docutils literal notranslate"><span class="pre">CD</span></code>. La
+reproducción puede reanudarse en el mismo punto con el método
+<code class="docutils literal notranslate"><span class="pre">CD.resume()</span></code>. Si el <code class="docutils literal notranslate"><span class="pre">CD</span></code> no está reproduciendo, este método
+no hace nada.</p>
+<p>Nota: la pista 0 es la primera en el <code class="docutils literal notranslate"><span class="pre">CD</span></code>. Los números de pista
+comienzan en cero.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.cdrom.CD.resume">
+<span class="sig-name descname"><span class="pre">resume</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cdrom.CD.resume" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">unpause audio playback</span></div>
+<div class="line"><span class="signature">resume() -&gt; None</span></div>
+</div>
+<p>Reanuda la reproducción de un <code class="docutils literal notranslate"><span class="pre">CD</span></code>. Si el <code class="docutils literal notranslate"><span class="pre">CD</span></code> no está en pausa
+o ya se está reproduciendo, este método no hace nada.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.cdrom.CD.eject">
+<span class="sig-name descname"><span class="pre">eject</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cdrom.CD.eject" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">eject or open the cdrom drive</span></div>
+<div class="line"><span class="signature">eject() -&gt; None</span></div>
+</div>
+<p>Esto abrirá la unidad de CD y expulsará el CD-ROM. Si la unidad
+está reproduciendo o en pausa, se detendrá.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.cdrom.CD.get_id">
+<span class="sig-name descname"><span class="pre">get_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cdrom.CD.get_id" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">the index of the cdrom drive</span></div>
+<div class="line"><span class="signature">get_id() -&gt; id</span></div>
+</div>
+<p>Devuelve el ID entero que se utilizó para crear la instancia de <code class="docutils literal notranslate"><span class="pre">CD</span></code>.
+Este método puede funcionar en un <code class="docutils literal notranslate"><span class="pre">CD</span></code> no inicializado.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.cdrom.CD.get_name">
+<span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cdrom.CD.get_name" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">the system name of the cdrom drive</span></div>
+<div class="line"><span class="signature">get_name() -&gt; name</span></div>
+</div>
+<p>Devuelve el nombre de la unidad en forma de cadena. Este es el nombre
+de sitema utilizado para representar la unidad, a menudo es la letra
+de la unidad o el nombre del dispositivo. Este método puede funcionar
+en un <code class="docutils literal notranslate"><span class="pre">CD</span></code> no inicializado.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.cdrom.CD.get_busy">
+<span class="sig-name descname"><span class="pre">get_busy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cdrom.CD.get_busy" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">true if the drive is playing audio</span></div>
+<div class="line"><span class="signature">get_busy() -&gt; bool</span></div>
+</div>
+<p>Devuelve True (verdadero) si la unidad está ocupada reproduciendo audio.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.cdrom.CD.get_paused">
+<span class="sig-name descname"><span class="pre">get_paused</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cdrom.CD.get_paused" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">true if the drive is paused</span></div>
+<div class="line"><span class="signature">get_paused() -&gt; bool</span></div>
+</div>
+<p>Devuelve True (verdadero) si la unidad está actualmente en pausa.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.cdrom.CD.get_current">
+<span class="sig-name descname"><span class="pre">get_current</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cdrom.CD.get_current" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">the current audio playback position</span></div>
+<div class="line"><span class="signature">get_current() -&gt; track, seconds</span></div>
+</div>
+<p>Devuelve tanto la pista actual como el tiempo de esa pista. Este método
+funciona cuando la unidad está reproduciendo o en pausa.</p>
+<p>Nota: la pista 0 es la primera pista en el <code class="docutils literal notranslate"><span class="pre">CD</span></code>. Los números de pista
+comienzan en cero.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.cdrom.CD.get_empty">
+<span class="sig-name descname"><span class="pre">get_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cdrom.CD.get_empty" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">False if a cdrom is in the drive</span></div>
+<div class="line"><span class="signature">get_empty() -&gt; bool</span></div>
+</div>
+<p>Devuelve False (falso) si hay un CD-ROM en la unidad actualmente. Si la
+unidad está vacía devolverá True (verdadero).</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.cdrom.CD.get_numtracks">
+<span class="sig-name descname"><span class="pre">get_numtracks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cdrom.CD.get_numtracks" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">the number of tracks on the cdrom</span></div>
+<div class="line"><span class="signature">get_numtracks() -&gt; count</span></div>
+</div>
+<p>Devuelve el número de pistas en el CD-ROM de la unidad. Esto devolverá
+cero si la unidad está vacía o no tiene pistas.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.cdrom.CD.get_track_audio">
+<span class="sig-name descname"><span class="pre">get_track_audio</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cdrom.CD.get_track_audio" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">true if the cdrom track has audio data</span></div>
+<div class="line"><span class="signature">get_track_audio(track) -&gt; bool</span></div>
+</div>
+<p>Determina si una pista en un CD-ROM contiene datos de audio. También
+podés llamar a <code class="docutils literal notranslate"><span class="pre">CD.num_tracks()</span></code> y <code class="docutils literal notranslate"><span class="pre">CD.get_all()</span></code> para obtener
+más información sobre el CD-ROM.</p>
+<p>Nota: la pista 0 es la primera pista en el <code class="docutils literal notranslate"><span class="pre">CD</span></code>. Los números de pistas
+comienzan en cero.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.cdrom.CD.get_all">
+<span class="sig-name descname"><span class="pre">get_all</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cdrom.CD.get_all" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">get all track information</span></div>
+<div class="line"><span class="signature">get_all() -&gt; [(audio, start, end, length), ...]</span></div>
+</div>
+<p>Devuelve una lista con información para cada pista en el CD-ROM. La
+información consiste en una tupla con cuatro valores. El valor &quot;audio&quot;
+es True (verdadero) si la pista contiene data de audio. Los valores
+de inicio, fin y longitud son números de puntos flotantes en segundos.
+&quot;Start&quot; (inicio) y &quot;end&quot; (fin) representan tiempos absolutos en todo
+el disco.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.cdrom.CD.get_track_start">
+<span class="sig-name descname"><span class="pre">get_track_start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cdrom.CD.get_track_start" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">start time of a cdrom track</span></div>
+<div class="line"><span class="signature">get_track_start(track) -&gt; seconds</span></div>
+</div>
+<p>Devuelve el tiempo absoluto en segundos al inicio de la pista del CD-ROM.</p>
+<p>Nota: la pista 0 es la primera pista del <code class="docutils literal notranslate"><span class="pre">CD</span></code>. Los números de pista
+comienzan en cero.</p>
+</dd></dl>
+
+<dl class="py method definition">
+<dt class="sig sig-object py title" id="pygame.cdrom.CD.get_track_length">
+<span class="sig-name descname"><span class="pre">get_track_length</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pygame.cdrom.CD.get_track_length" title="Link to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line"><span class="summaryline">length of a cdrom track</span></div>
+<div class="line"><span class="signature">get_track_length(track) -&gt; seconds</span></div>
+</div>
+<p>Devuelve un valor de punto flotante en segundos de la duración de
+la pista del CD-ROM.</p>
+<p>Nota: la pista 0 es la primera pista del <code class="docutils literal notranslate"><span class="pre">CD</span></code>. Los números de pista
+comienzan en cero.</p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+<br /><br />
+<hr />
+<a href="https://github.com/pygame/pygame/edit/main/docs/reST/referencias/cdrom.rst" rel="nofollow">Edit on GitHub</a>
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navegación</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Índice General"
+             accesskey="I">índice</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Índice de Módulos Python"
+             >módulos</a> |</li>
+        <li class="right" >
+          <a href="color.html" title="pygame.Color"
+             accesskey="N">siguiente</a> |</li>
+        <li class="right" >
+          <a href="camera.html" title="pygame.camera"
+             accesskey="P">anterior</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pygame v2.6.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href=""><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygame.cdrom</span></code></a></li>
+    <script type="text/javascript" src="https://www.pygame.org/comment/jquery.plugin.docscomments.js"></script>
+
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2000-2023, pygame developers.
+    </div>
+  </body>
+</html>
